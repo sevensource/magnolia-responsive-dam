@@ -1,0 +1,3 @@
+aspectAwareDamUploadField:
+  definitionClass: org.sevensource.magnolia.responsivedam.field.upload.AspectAwareDamUploadFieldDefinition
+  factoryClass: org.sevensource.magnolia.responsivedam.field.upload.AspectAwareDamUploadFieldFactory
