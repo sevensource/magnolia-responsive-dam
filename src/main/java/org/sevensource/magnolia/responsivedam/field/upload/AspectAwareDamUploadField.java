@@ -9,8 +9,10 @@ import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.sevensource.magnolia.responsivedam.ResponsiveDamModule;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
+import org.sevensource.magnolia.responsivedam.field.AspectAwareUiUtils;
+import org.sevensource.magnolia.responsivedam.field.AspectAwareUiUtils.InfoLabelStyle;
+import org.sevensource.magnolia.responsivedam.field.FocusAreas;
 import org.sevensource.magnolia.responsivedam.field.focusareaselection.FocusAreaSelectionPresenter;
-import org.sevensource.magnolia.responsivedam.field.model.FocusAreas;
 import org.sevensource.magnolia.responsivedam.field.validation.AspectAwareDamUploadFieldValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,17 +44,15 @@ import info.magnolia.ui.vaadin.overlay.MessageStyleTypeEnum;
 @StyleSheet("vaadin://responsive-dam/aspect-aware-dam-upload-field.css")
 public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUploadReceiver> {
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareDamUploadField.class);
-	
-	private static final String INFO_LABEL_WARN_CLASS = "warn";
-	private static final String INFO_LABEL_ERROR_CLASS = "error";
+
 	
 	static final String editAspectsButtonCaption = "field.aspectUpload.caption";
 	static final String aspectsIncompleteErrorTxt = "field.aspectUpload.error.incomplete";
 	static final String aspectsEmptyWarnTxt = "field.aspectUpload.warn.empty";
 	static final String aspectsSetOkTxt = "field.aspectUpload.note.valid";
 	
-	private final ResponsiveDamModule responsiveDamModule;
-	private final AspectAwareDamUploadFieldDefinition definition;
+	private final transient ResponsiveDamModule responsiveDamModule;
+	private final transient AspectAwareDamUploadFieldDefinition definition;
 	private final transient SimpleTranslator i18n;
 	private final transient ComponentProvider componentProvider;
 	private final transient I18nizer i18nizer;
@@ -77,7 +77,7 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
 		this.i18nizer = i18nizer;
 		this.actionbarPresenter = actionbarPresenter;
 		
-		addValueChangeListener((event) -> updateInfoLabel());
+		addValueChangeListener(event -> updateInfoLabel());
 		addStyleName("aspect-upload-image-field");
 	}
 	
@@ -139,42 +139,14 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
 		if(this.infoLabel != null) {
 			if((getValue().getFocusAreas() == null || MapUtils.isEmpty(getValue().getFocusAreas().getAreas()))) {
 				if(hasRequiredAspects()) {
-					updateInfoLabel(i18n.translate(aspectsEmptyWarnTxt), InfoLabelStyle.WARN);
+					AspectAwareUiUtils.updateInfoLabel(this.infoLabel, i18n.translate(aspectsEmptyWarnTxt), InfoLabelStyle.WARN);
 				} else {
-					updateInfoLabel("", InfoLabelStyle.OK);			
+					AspectAwareUiUtils.updateInfoLabel(this.infoLabel, "", InfoLabelStyle.OK);			
 				}
 			} else if(! isFocusAreaSelectionComplete()) {
-				updateInfoLabel(i18n.translate(aspectsIncompleteErrorTxt), InfoLabelStyle.ERROR);
+				AspectAwareUiUtils.updateInfoLabel(this.infoLabel, i18n.translate(aspectsIncompleteErrorTxt), InfoLabelStyle.ERROR);
 			} else {
-				updateInfoLabel(i18n.translate(aspectsSetOkTxt), InfoLabelStyle.OK);
-			}
-		}
-	}
-	
-	
-	private enum InfoLabelStyle {
-		OK,
-		WARN,
-		ERROR;
-	}
-	
-	private void updateInfoLabel(String txt, InfoLabelStyle style) {
-		if(this.infoLabel != null) {
-			this.infoLabel.setValue(txt);
-			
-			switch(style) {
-			case OK:
-				this.infoLabel.removeStyleName(INFO_LABEL_WARN_CLASS);
-				this.infoLabel.removeStyleName(INFO_LABEL_ERROR_CLASS);
-				break;
-			case WARN:
-				this.infoLabel.addStyleName(INFO_LABEL_WARN_CLASS);
-				this.infoLabel.removeStyleName(INFO_LABEL_ERROR_CLASS);
-				break;
-			case ERROR:
-				this.infoLabel.removeStyleName(INFO_LABEL_WARN_CLASS);
-				this.infoLabel.addStyleName(INFO_LABEL_ERROR_CLASS);
-				break;
+				AspectAwareUiUtils.updateInfoLabel(this.infoLabel, i18n.translate(aspectsSetOkTxt), InfoLabelStyle.OK);
 			}
 		}
 	}
@@ -246,15 +218,5 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
 		} catch (IOException e) {
 			logger.error("error while closing inputStream", e);
 		}
-    	
-		
-//		// TODO: DUMMY
-//		FocusAreas focusAreas = new FocusAreas();
-//		FocusArea area = new FocusArea(1, 2,3,4);
-//		focusAreas.addArea("16-9", area);
-//    	
-//        getValue().setFocusArea(focusAreas);
-//        getPropertyDataSource().setValue(getValue());
-
     }
 }

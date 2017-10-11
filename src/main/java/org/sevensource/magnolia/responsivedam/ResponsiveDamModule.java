@@ -57,6 +57,10 @@ public class ResponsiveDamModule implements ModuleLifecycle {
 	}
 	
 	public DamVariationSet getConfiguredVariation(String name) {
+		if(StringUtils.isEmpty(name)) {
+			return null;
+		}
+		
 		return configuredVariations
 			.stream()
 			.filter(i -> name.equals(i.getName()))

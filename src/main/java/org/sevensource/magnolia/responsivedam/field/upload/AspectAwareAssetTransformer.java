@@ -11,8 +11,8 @@ import javax.inject.Inject;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.sevensource.magnolia.responsivedam.field.model.FocusArea;
-import org.sevensource.magnolia.responsivedam.field.model.FocusAreas;
+import org.sevensource.magnolia.responsivedam.field.FocusArea;
+import org.sevensource.magnolia.responsivedam.field.FocusAreas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,7 +35,7 @@ public class AspectAwareAssetTransformer extends AssetTransformer<AspectAwareAss
 
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareAssetTransformer.class);
 
-	private static final String PROP_ASPECTS = "focusAreas";
+	public static final String PROP_ASPECTS = "focusAreas";
 	private static final String PROP_X = "x";
 	private static final String PROP_Y = "y";
 	private static final String PROP_WIDTH = "width";
@@ -187,29 +187,23 @@ public class AspectAwareAssetTransformer extends AssetTransformer<AspectAwareAss
         return child;
     }
     
+    private static Integer longToInteger(Long value) {
+    	return value != null ? value.intValue() : null;
+    }
     
     private FocusArea getOrCreateFocusAreaFromItem(Item item) {
     	Property<Long> pX = getOrCreateProperty(item, PROP_X, Long.class);
     	Property<Long> pY = getOrCreateProperty(item, PROP_Y, Long.class);
     	Property<Long> pW = getOrCreateProperty(item, PROP_WIDTH, Long.class);
     	Property<Long> pH = getOrCreateProperty(item, PROP_HEIGHT, Long.class);
+
+    	final Integer x = longToInteger(pX.getValue());
+    	final Integer y = longToInteger(pY.getValue());
+    	final Integer w = longToInteger(pW.getValue());        		
+    	final Integer h = longToInteger(pH.getValue());
     	
-    	if(
-    			pX.getValue() == null ||
-    			pY.getValue() == null ||
-    			pW.getValue() == null ||
-    			pH.getValue() == null ||
-    			pW.getValue() < 1 ||
-    			pH.getValue() < 1) {
-    		return null;
-    	} else {
-        	final int x = pX.getValue().intValue();
-        	final int y = pY.getValue().intValue();
-        	final int w = pW.getValue().intValue();        		
-        	final int h = pH.getValue().intValue();
-        	
-        	
-        	return new FocusArea(x, y, w, h);
-    	}
+    	FocusArea focusArea = new FocusArea(x, y, w, h);
+    	
+    	return focusArea.isValid() ? focusArea : null;
     }
 }

@@ -23,7 +23,7 @@ public class SizeSpecification {
 	public enum ResponsiveDamSizeDimension {
 		WIDTH, HEIGHT;
 
-		public static ResponsiveDamSizeDimension parse(String spec) {
+		public static ResponsiveDamSizeDimension of(String spec) {
 			if (spec.equals("w")) {
 				return WIDTH;
 			} else if (spec.equals("h")) {
@@ -42,7 +42,7 @@ public class SizeSpecification {
 
 	public SizeSpecification(String spec) {
 		final String dimensionSpec = spec.substring(spec.length() - 1, spec.length());
-		ResponsiveDamSizeDimension pDimension = ResponsiveDamSizeDimension.parse(dimensionSpec);
+		ResponsiveDamSizeDimension pDimension = ResponsiveDamSizeDimension.of(dimensionSpec);
 
 		final Integer pValue = Integer.valueOf(spec.substring(0, spec.length() - 1));
 

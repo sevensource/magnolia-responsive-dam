@@ -58,10 +58,7 @@ public class DamVariationSpecification {
 		} else {
 			parsedValue = Double.parseDouble(value);
 		}
-
-		if (logger.isDebugEnabled()) {
-			logger.debug("Parsed aspect to ratio {}=>{}", value, parsedValue);
-		}
+		
 		return parsedValue;
 	}
 }

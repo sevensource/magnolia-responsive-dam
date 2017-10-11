@@ -1,0 +1,3 @@
+aspectAwareDamLinkField:
+  definitionClass: org.sevensource.magnolia.responsivedam.field.link.AspectAwareDamLinkFieldDefinition
+  factoryClass: org.sevensource.magnolia.responsivedam.field.link.AspectAwareDamLinkFieldFactory

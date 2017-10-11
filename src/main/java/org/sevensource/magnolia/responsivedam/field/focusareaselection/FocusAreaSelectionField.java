@@ -7,7 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.StringUtils;
-import org.sevensource.magnolia.responsivedam.field.model.FocusArea;
+import org.sevensource.magnolia.responsivedam.field.FocusArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
