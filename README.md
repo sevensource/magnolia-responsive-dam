@@ -23,36 +23,40 @@ Installation
 
 Configuration
 =============
-* change /modules/dam-app/apps/assets/subApps/detail/editor/form/tabs/asset/fields/resource
+* change `/modules/dam-app/apps/assets/subApps/detail/editor/form/tabs/asset/fields/resource` and add the following properties:
+```
   class: org.sevensource.magnolia.responsivedam.field.upload.AspectAwareDamUploadFieldDefinition
   useExistingFocusAreas: true
-  
-* in /modules/responsive-dam/config/variations, add a variation set, for example:
+```
+* in `/modules/responsive-dam/config/variations`, add a variation set, for example:
+```
   hero-area:
     mobile:
       aspect: "4:3"
     default:
       aspect: "16:9"
-      
-* add the field to a component:
-	- name: heroimage
-	  label: ImageUpload
-	  variationSet: hero-area
-	  class: org.sevensource.magnolia.responsivedam.field.upload.AspectAwareDamUploadFieldDefinition
-	  binaryNodeName: image
-	  editFileName: true
-
-	or
-    - name: heroimagelink
-      label: ImageLink
-      variationSet: hero-area
-      class: org.sevensource.magnolia.responsivedam.field.link.AspectAwareDamLinkFieldDefinition
-      targetWorkspace: dam
-      appName: assets
-      aspectsAppName: "dam-app:uploadAndEdit"
-      identifierToPathConverter:
-        class: info.magnolia.dam.app.assets.field.translator.AssetCompositeIdKeyTranslator
-      contentPreviewDefinition:
-        contentPreviewClass: info.magnolia.dam.app.ui.field.DamFilePreviewComponent
-      
+```   
+* either add a direct DamUploadField to a component:
+```
+  - name: heroimage
+    label: ImageUpload
+    variationSet: hero-area
+    class: org.sevensource.magnolia.responsivedam.field.upload.AspectAwareDamUploadFieldDefinition
+    binaryNodeName: image
+    editFileName: true
+```
+* or add a LinkField for storing the image in DAM
+```
+  - name: heroimagelink
+    label: ImageLink
+    variationSet: hero-area
+    class: org.sevensource.magnolia.responsivedam.field.link.AspectAwareDamLinkFieldDefinition
+    targetWorkspace: dam
+    appName: assets
+    aspectsAppName: "dam-app:uploadAndEdit"
+    identifierToPathConverter:
+    class: info.magnolia.dam.app.assets.field.translator.AssetCompositeIdKeyTranslator
+    contentPreviewDefinition:
+    contentPreviewClass: info.magnolia.dam.app.ui.field.DamFilePreviewComponent
+```   
 
