@@ -199,7 +199,7 @@ public class AspectAwareDamLinkField extends CustomField<String> {
         for(TabDefinition tabDefinition : dialogDefinition.getForm().getTabs()) {
         	for(FieldDefinition fieldDefinition : tabDefinition.getFields()) {
         		if(fieldDefinition instanceof AspectAwareDamUploadFieldDefinition) {
-        			((AspectAwareDamUploadFieldDefinition)fieldDefinition).setVariation(variationSet.getName());
+        			((AspectAwareDamUploadFieldDefinition)fieldDefinition).setVariationSet(variationSet.getName());
         		}
         	}
         }

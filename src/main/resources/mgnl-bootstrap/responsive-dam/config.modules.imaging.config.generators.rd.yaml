@@ -1,0 +1,6 @@
+'rd': 
+  'class': 'org.sevensource.magnolia.responsivedam.imaging.ResponsiveDamImageGenerator'
+  'parameterProviderFactory': 
+    'class': 'org.sevensource.magnolia.responsivedam.imaging.parameter.AspectAwareParameterProviderFactory'
+
+

@@ -1,4 +1,4 @@
-package org.sevensource.magnolia.responsivedam.field;
+package org.sevensource.magnolia.responsivedam.focusarea;
 
 import java.util.HashMap;
 import java.util.Map;

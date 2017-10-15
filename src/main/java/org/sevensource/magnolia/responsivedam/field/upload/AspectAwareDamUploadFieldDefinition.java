@@ -10,18 +10,27 @@ public class AspectAwareDamUploadFieldDefinition extends DamUploadFieldDefinitio
 	
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareDamUploadFieldDefinition.class);
 	
-	private String variation;
+	private String variationSet;
+	private boolean useExistingFocusAreas = false;
 	
 	public AspectAwareDamUploadFieldDefinition() {
 		super();
 		setTransformerClass((Class<? extends Transformer<?>>) (Object) AspectAwareAssetTransformer.class);
 	}
 	
-	public String getVariation() {
-		return variation;
+	public String getVariationSet() {
+		return variationSet;
 	}
 	
-	public void setVariation(String variation) {
-		this.variation = variation;
+	public void setVariationSet(String variationSet) {
+		this.variationSet = variationSet;
+	}
+	
+	public void setUseExistingFocusAreas(boolean useExistingFocusAreas) {
+		this.useExistingFocusAreas = useExistingFocusAreas;
+	}
+	
+	public boolean isUseExistingFocusAreas() {
+		return useExistingFocusAreas;
 	}
 }

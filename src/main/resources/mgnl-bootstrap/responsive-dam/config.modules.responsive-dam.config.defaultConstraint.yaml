@@ -1,4 +1,4 @@
 defaultConstraint:
-  maximum-resolutions: 5
-  minimum-resolution-size-step: 100
+  maximumResolutions: 5
+  minimumResolutionSizeStep: 100
     

@@ -6,14 +6,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
+import org.sevensource.magnolia.responsivedam.configuration.DamVariation;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
-import org.sevensource.magnolia.responsivedam.configuration.DamVariationSpecification;
-import org.sevensource.magnolia.responsivedam.field.FocusArea;
-import org.sevensource.magnolia.responsivedam.field.FocusAreas;
+import org.sevensource.magnolia.responsivedam.focusarea.FocusArea;
+import org.sevensource.magnolia.responsivedam.focusarea.FocusAreas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,7 +49,6 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
 
 	
 	private FocusAreas focusAreas;
-	//private Map<String, ConfiguredAspectDefinition> knownAspects;
 	private DamVariationSet damVariationSet;
 	private FocusAreaSelectionCompletedListener completionListener;
 	
@@ -119,11 +116,11 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
         }
     }
     
-    public void setActiveSelectDefinition(String name, Double aspectRatio) {
-    	if(name != null) {
-	    	FocusArea preSelected = focusAreas.getAreas().get(name);
-	    	imageAreaSelectionField.setAreaSelectOptions(name, aspectRatio, preSelected);
-	    	leftInfoToolbar.setValue(i18n.translate("field.aspectSelection.info.editing", name));
+    public void setActiveSelectDefinition(DamVariation variation) {
+    	if(variation != null) {
+	    	FocusArea preSelected = focusAreas.getAreas().get(variation.getName());
+	    	imageAreaSelectionField.setAreaSelectOptions(variation, preSelected);
+	    	leftInfoToolbar.setValue(i18n.translate("field.aspectSelection.info.editing", variation.getName()));
     	}
     }
     
@@ -135,7 +132,7 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
     	}
     	
     	updateToolbar();
-    	if(getMissingRequiredAspects().isEmpty()) {
+    	if(getMissingAspects().isEmpty()) {
     		defaultAction.setEnabled(true);
     	}
     }
@@ -206,23 +203,13 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
     }
     
     
-    private Map<String, DamVariationSpecification> getMissingRequiredAspects() {
-    	return getMissingAspects()
-    			.entrySet()
-    			.stream()
-    			//.filter(e -> e.getValue().isRequired())
-    			.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
-    }
-    
-    private Map<String, DamVariationSpecification> getMissingAspects() {
-    	final Map<String, DamVariationSpecification> missing = new HashMap<>();
+    private Map<String, DamVariation> getMissingAspects() {
+    	final Map<String, DamVariation> missing = new HashMap<>();
     	
-    	
-    	for(DamVariationSpecification spec : damVariationSet.getSpecifications()) {
-    	//for(Entry<String, ConfiguredAspectDefinition> aspect : this.knownAspects.entrySet()) {
+    	for(DamVariation spec : damVariationSet.getVariations()) {
     		if(focusAreas != null && focusAreas.getAreas() != null) {
     			FocusArea a = focusAreas.getAreas().get(spec.getName());
-    			if(a == null || a.getWidth() < 10 || a.getHeight() < 10) {
+    			if(a == null || !a.isValid()) {
     				missing.put(spec.getName(), spec);
     			}
     		}

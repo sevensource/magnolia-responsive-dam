@@ -6,11 +6,35 @@
   <description>${project.description}</description>
   <class>org.sevensource.magnolia.responsivedam.ResponsiveDamModule</class>
   <version>${project.version}</version>
+  
+  <components>
+    <id>main</id>
+    <component>
+      <type>org.sevensource.magnolia.responsivedam.templating.ResponsiveDamTemplatingFunctions</type>
+      <implementation>org.sevensource.magnolia.responsivedam.templating.ResponsiveDamTemplatingFunctions</implementation>
+      <scope>singleton</scope>
+    </component>
+  </components>
 
   <dependencies>
     <dependency>
       <name>core</name>
       <version>5.5.4/*</version>
+    </dependency>
+    
+    <dependency>
+    	<name>dam-app</name>
+    	<version>2.2.6/*</version>
+    </dependency>
+    
+    <dependency>
+      <name>rendering</name>
+      <version>5.4/*</version>
+    </dependency>
+    
+    <dependency>
+    	<name>imaging</name>
+    	<version>3.3.0/*</version>
     </dependency>
   </dependencies>
 </module>

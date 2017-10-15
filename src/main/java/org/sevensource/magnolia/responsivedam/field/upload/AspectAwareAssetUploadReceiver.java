@@ -4,7 +4,7 @@ import java.io.OutputStream;
 
 import javax.inject.Inject;
 
-import org.sevensource.magnolia.responsivedam.field.FocusAreas;
+import org.sevensource.magnolia.responsivedam.focusarea.FocusAreas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

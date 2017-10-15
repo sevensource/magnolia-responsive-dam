@@ -9,8 +9,8 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.sevensource.magnolia.responsivedam.configuration.DamSizeConstraints;
+import org.sevensource.magnolia.responsivedam.configuration.DamVariation;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
-import org.sevensource.magnolia.responsivedam.configuration.DamVariationSpecification;
 import org.sevensource.magnolia.responsivedam.configuration.SizeSpecification;
 import org.sevensource.magnolia.responsivedam.configuration.SizeSpecification.SizeSpecificationConverter;
 import org.slf4j.Logger;
@@ -27,7 +27,7 @@ public class ResponsiveDamModule implements ModuleLifecycle {
 	private Map<String, Map<String, Map<String, String>>> variations;
 	private DamSizeConstraints defaultConstraint;
 	
-	private Set<DamVariationSet> configuredVariations;
+	private Set<DamVariationSet> configuredVariationSets;
 
 	
 	public DamSizeConstraints getDefaultConstraint() {
@@ -48,37 +48,64 @@ public class ResponsiveDamModule implements ModuleLifecycle {
 	
 	///////
 	
-	public void setConfiguredVariations(Set<DamVariationSet> configuredVariations) {
-		this.configuredVariations = configuredVariations;
+	public void setConfiguredVariationSets(Set<DamVariationSet> variationSets) {
+		this.configuredVariationSets = variationSets;
 	}
 	
-	public Set<DamVariationSet> getConfiguredVariations() {
-		return configuredVariations;
+	public Set<DamVariationSet> getConfiguredVariationSets() {
+		return configuredVariationSets;
 	}
 	
-	public DamVariationSet getConfiguredVariation(String name) {
+	public DamVariationSet getConfiguredVariationSet(String name) {
 		if(StringUtils.isEmpty(name)) {
 			return null;
 		}
 		
-		return configuredVariations
+		return configuredVariationSets
 			.stream()
 			.filter(i -> name.equals(i.getName()))
 			.findFirst()
 			.orElse(null);		
 	}
 	
+	public DamVariation getConfiguredVariation(String variationSet, String variation) {
+		final DamVariationSet set = getConfiguredVariationSet(variationSet);
+		return set==null ? null : set.getVariation(variation);
+	}
+	
+	public DamVariation getAnyConfiguredVariation(String variationName) {
+		
+		DamVariation selectedVariation = null;
+		
+		for(DamVariationSet variationSet : configuredVariationSets) {
+			final DamVariation variation = variationSet.getVariation(variationName);
+			if(variation != null) {
+				if(selectedVariation == null) {
+					selectedVariation = variation;
+				} else {
+					final int selectedSize = selectedVariation.getConstraints().getMinimumSize().getValue();
+					final int thisSize = variation.getConstraints().getMinimumSize().getValue();
+					if(selectedSize < thisSize) {
+						selectedVariation = variation;	
+					}
+				}
+			}
+		}
+		
+		return selectedVariation;
+	}
+	
 	
 	@Override
 	public void start(ModuleLifecycleContext moduleLifecycleContext) {
 		
-		if(configuredVariations != null) {
-			this.configuredVariations.clear();
+		if(configuredVariationSets != null) {
+			this.configuredVariationSets.clear();
 		} else {
-			this.configuredVariations = new HashSet<>();
+			this.configuredVariationSets = new HashSet<>();
 		}
 
-		this.configuredVariations.addAll(convertVariations(this.variations, this.defaultConstraint));
+		this.configuredVariationSets.addAll(convertVariations(this.variations, this.defaultConstraint));
 	}
 	
 	
@@ -107,16 +134,18 @@ public class ResponsiveDamModule implements ModuleLifecycle {
 				final String variationId = variationEntry.getKey();
 				
 				try {
-					DamVariationSpecification specification = new DamVariationSpecification();
-					BeanUtils.populate(specification, variationEntry.getValue());
+					DamVariation variation = new DamVariation();
+					BeanUtils.populate(variation, variationEntry.getValue());
 					
-					if(StringUtils.isEmpty(specification.getName())) {
-						specification.setName(variationId);
+					if(StringUtils.isEmpty(variation.getName())) {
+						variation.setName(variationId);
 					}
 					
-					assignResponsiveSizeConstraintsDefaults(specification.getConstraints(), defaultConstraints);
+					variation.setVariationSet(damVariationSet);
 					
-					damVariationSet.addSpecification(specification);
+					assignResponsiveSizeConstraintsDefaults(variation.getConstraints(), defaultConstraints);
+					
+					damVariationSet.addVariation(variation);
 				} catch (Exception e) {
 					logger.error("Error whole parsing responsive dam variations", e);
 					throw new IllegalArgumentException(e);

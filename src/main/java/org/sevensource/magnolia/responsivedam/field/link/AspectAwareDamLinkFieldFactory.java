@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.data.Item;
-import com.vaadin.data.util.converter.Converter;
 import com.vaadin.ui.Field;
 
 import info.magnolia.i18nsystem.SimpleTranslator;
@@ -57,7 +56,7 @@ public class AspectAwareDamLinkFieldFactory extends LinkFieldFactory<AspectAware
     protected Field<String> createFieldComponent() {
     	final LinkField linkField = (LinkField) super.createFieldComponent();
     	
-    	final DamVariationSet variationSet = responsiveDamModule.getConfiguredVariation(definition.getVariation());
+    	final DamVariationSet variationSet = responsiveDamModule.getConfiguredVariationSet(definition.getVariationSet());
     	
     	final AspectAwareDamLinkField field = new AspectAwareDamLinkField
     			(linkField, formDialogPresenterFactory, dialogDefinitionRegistry, uiContext, i18n);

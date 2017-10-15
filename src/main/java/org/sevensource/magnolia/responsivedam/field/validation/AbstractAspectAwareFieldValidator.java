@@ -4,9 +4,9 @@ import java.util.Collections;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import org.sevensource.magnolia.responsivedam.configuration.DamVariation;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
-import org.sevensource.magnolia.responsivedam.configuration.DamVariationSpecification;
-import org.sevensource.magnolia.responsivedam.field.FocusAreas;
+import org.sevensource.magnolia.responsivedam.focusarea.FocusAreas;
 
 import com.vaadin.data.validator.AbstractValidator;
 
@@ -28,9 +28,9 @@ public abstract class AbstractAspectAwareFieldValidator<T> extends AbstractValid
 		}
 		
 		final Set<String> requiredAspects = damVariationSet
-			.getSpecifications()
+			.getVariations()
 			.stream()
-			.map(DamVariationSpecification::getName)
+			.map(DamVariation::getName)
 			.collect(Collectors.toSet());
 		
 		if(requiredAspects.isEmpty()) {

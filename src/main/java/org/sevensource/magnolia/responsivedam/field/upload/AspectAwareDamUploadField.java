@@ -8,17 +8,17 @@ import java.io.InputStream;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.sevensource.magnolia.responsivedam.ResponsiveDamModule;
+import org.sevensource.magnolia.responsivedam.configuration.DamVariation;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
 import org.sevensource.magnolia.responsivedam.field.AspectAwareUiUtils;
 import org.sevensource.magnolia.responsivedam.field.AspectAwareUiUtils.InfoLabelStyle;
-import org.sevensource.magnolia.responsivedam.field.FocusAreas;
 import org.sevensource.magnolia.responsivedam.field.focusareaselection.FocusAreaSelectionPresenter;
 import org.sevensource.magnolia.responsivedam.field.validation.AspectAwareDamUploadFieldValidator;
+import org.sevensource.magnolia.responsivedam.focusarea.FocusAreas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.annotations.StyleSheet;
-import com.vaadin.data.Property;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
@@ -88,11 +88,7 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
         if (!isReadOnly() && getValue() != null && 
         		!getValue().isEmpty() && 
         		getValue().isImage() &&
-        		!StringUtils.isEmpty(definition.getVariation())) {
-        	
-        	if(responsiveDamModule.getConfiguredVariation(definition.getVariation()) == null) {
-        		throw new IllegalArgumentException("Unknown variation with name " + definition.getVariation());
-        	}
+        		(hasConfiguredVariationSet() || isShowExistingFocusAreas())) {
         	
             Button edit = createEditAspectsButton();
             this.infoLabel = new Label();
@@ -138,7 +134,7 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
 	private void updateInfoLabel() {
 		if(this.infoLabel != null) {
 			if((getValue().getFocusAreas() == null || MapUtils.isEmpty(getValue().getFocusAreas().getAreas()))) {
-				if(hasRequiredAspects()) {
+				if(hasConfiguredVariationSet()) {
 					AspectAwareUiUtils.updateInfoLabel(this.infoLabel, i18n.translate(aspectsEmptyWarnTxt), InfoLabelStyle.WARN);
 				} else {
 					AspectAwareUiUtils.updateInfoLabel(this.infoLabel, "", InfoLabelStyle.OK);			
@@ -151,17 +147,26 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
 		}
 	}
 	
-	private boolean hasRequiredAspects() {
-		final AspectAwareDamUploadFieldValidator validator = getAspectValidator();
-		if(validator == null) {
-			return true;
-		}
-		
-		// TODO
-		return true;
-		//return ! this.definition.getRequiredAspects().isEmpty();
+	
+	private boolean isShowExistingFocusAreas() {
+		return getValue().getFocusAreas() != null && 
+				! MapUtils.isEmpty(getValue().getFocusAreas().getAreas()) &&
+				definition.isUseExistingFocusAreas();
 	}
 	
+	private boolean hasConfiguredVariationSet() {
+		if(StringUtils.isEmpty(definition.getVariationSet())) {
+			return false;
+		}
+		
+    	if(responsiveDamModule.getConfiguredVariationSet(definition.getVariationSet()) == null) {
+    		throw new IllegalArgumentException("Unknown variationset with name " + definition.getVariationSet());
+    	}
+    	
+    	return true;
+	}
+	
+
 	private boolean isFocusAreaSelectionComplete() {
 		final AspectAwareDamUploadFieldValidator validator = getAspectValidator();
 		if(validator == null) {
@@ -199,7 +204,21 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
 			val = FocusAreas.of(getValue().getFocusAreas());
 		}
 		
-		final DamVariationSet damVariationSet = responsiveDamModule.getConfiguredVariation(definition.getVariation());
+		final DamVariationSet damVariationSet;
+		if(! StringUtils.isEmpty(definition.getVariationSet())) {
+			damVariationSet = responsiveDamModule.getConfiguredVariationSet(definition.getVariationSet());
+		} else if(definition.isUseExistingFocusAreas()) {
+			damVariationSet = new DamVariationSet(null);
+			
+			for(String areaName : val.getAreas().keySet()) {
+				final DamVariation variation = responsiveDamModule.getAnyConfiguredVariation(areaName);
+				if(variation != null) {
+					damVariationSet.addVariation(variation);
+				}
+			}
+		} else {
+			throw new IllegalArgumentException("Neither a variationSet is specified nor useExistingFocusAreas");
+		}
 		
 		try(final InputStream inputStream = new FileInputStream(getValue().getFile())) {
 			final FocusAreaSelectionPresenter presenter = new FocusAreaSelectionPresenter(actionbarPresenter, dialogPresenter, imageAreaActionExecutor, appContext, i18n);
@@ -209,7 +228,6 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
 	        	
 				if(! isCanceled) {
 					getValue().setFocusArea(focusAreas);
-					//fireValueChange(false);
 					getPropertyDataSource().setValue(getValue());
 				}
 	        	

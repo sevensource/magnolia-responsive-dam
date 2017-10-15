@@ -4,7 +4,7 @@
 
 	<groupId>org.sevensource.magnolia</groupId>
 	<artifactId>magnolia-responsive-dam</artifactId>
-	<version>0.9.0-SNAPSHOT</version>
+	<version>0.9.0</version>
 	<packaging>jar</packaging>
 
 	<name>Magnolia Responsive DAM Module</name>
@@ -96,6 +96,13 @@
 			<groupId>info.magnolia.ui</groupId>
 			<artifactId>magnolia-ui-mediaeditor</artifactId>
 			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+		    <groupId>javax.servlet</groupId>
+		    <artifactId>javax.servlet-api</artifactId>
+		    <version>3.1.0</version>
+		    <scope>provided</scope>
 		</dependency>
 	</dependencies>
 
