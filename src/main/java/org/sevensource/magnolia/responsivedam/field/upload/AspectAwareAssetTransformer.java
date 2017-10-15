@@ -11,8 +11,9 @@ import javax.inject.Inject;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
-import org.sevensource.magnolia.responsivedam.field.FocusArea;
-import org.sevensource.magnolia.responsivedam.field.FocusAreas;
+import org.apache.jackrabbit.JcrConstants;
+import org.sevensource.magnolia.responsivedam.focusarea.FocusArea;
+import org.sevensource.magnolia.responsivedam.focusarea.FocusAreas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,8 +31,6 @@ import info.magnolia.ui.vaadin.integration.jcr.JcrNewNodeAdapter;
 import info.magnolia.ui.vaadin.integration.jcr.JcrNodeAdapter;
 
 public class AspectAwareAssetTransformer extends AssetTransformer<AspectAwareAssetUploadReceiver> {
-
-	private static final String JCR_CONTENT = "jcr:content";
 
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareAssetTransformer.class);
 
@@ -59,8 +58,7 @@ public class AspectAwareAssetTransformer extends AssetTransformer<AspectAwareAss
         super.populateItem(newValue, item);
 
         final Item rootItem = getRootItem();
-
-
+        
         final Item focusAreasItem = getOrCreateFocusAreasItem((AbstractJcrNodeAdapter) rootItem); 
         ((AbstractJcrNodeAdapter)rootItem).addChild((AbstractJcrNodeAdapter) focusAreasItem);
         
@@ -143,7 +141,7 @@ public class AspectAwareAssetTransformer extends AssetTransformer<AspectAwareAss
     @Override
     protected JcrNodeAdapter getRootItem() {
     	final String itemName = getItemName();
-    	if(itemName.equals(JCR_CONTENT)) {
+    	if(itemName.equals(JcrConstants.JCR_CONTENT)) {
     		return super.getRootItem();
     	} else {
     		JcrNodeAdapter superRootItem = super.getRootItem();
@@ -155,7 +153,7 @@ public class AspectAwareAssetTransformer extends AssetTransformer<AspectAwareAss
     
     @Override
     protected Item getOrCreateFileItem() {
-    	return getOrCreateItem(getRootItem(), JCR_CONTENT);
+    	return getOrCreateItem(getRootItem(), JcrConstants.JCR_CONTENT);
     }
     
     private Item getOrCreateFocusAreasItem(AbstractJcrNodeAdapter item) {

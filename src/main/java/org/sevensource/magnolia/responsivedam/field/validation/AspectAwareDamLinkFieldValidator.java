@@ -7,18 +7,15 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.lang3.StringUtils;
 import org.sevensource.magnolia.responsivedam.ResponsiveDamModule;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
-import org.sevensource.magnolia.responsivedam.field.FocusArea;
-import org.sevensource.magnolia.responsivedam.field.FocusAreas;
 import org.sevensource.magnolia.responsivedam.field.link.AspectAwareDamLinkFieldDefinition;
-import org.sevensource.magnolia.responsivedam.field.upload.AspectAwareAssetTransformer;
+import org.sevensource.magnolia.responsivedam.focusarea.FocusAreas;
+import org.sevensource.magnolia.responsivedam.focusarea.FocusAreasUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.magnolia.context.MgnlContext;
 import info.magnolia.dam.jcr.AssetNodeTypes;
-import info.magnolia.jcr.node2bean.Node2BeanException;
 import info.magnolia.jcr.node2bean.Node2BeanProcessor;
-import info.magnolia.jcr.util.NodeUtil;
 import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.ui.form.field.converter.IdentifierToPathConverter;
 
@@ -32,7 +29,7 @@ public class AspectAwareDamLinkFieldValidator extends AbstractAspectAwareFieldVa
 	
 	public AspectAwareDamLinkFieldValidator(ResponsiveDamModule responsiveDamModule, AspectAwareDamLinkFieldDefinition fieldDefinition, Node2BeanProcessor node2BeanProcessor, String errorMessage) {
 		super(errorMessage);
-		final DamVariationSet damVariationSet = responsiveDamModule.getConfiguredVariation(fieldDefinition.getVariation());
+		final DamVariationSet damVariationSet = responsiveDamModule.getConfiguredVariationSet(fieldDefinition.getVariationSet());
 		setDamVariationSet(damVariationSet);
 		
 		this.identifierToPathConverter = fieldDefinition.getIdentifierToPathConverter();
@@ -66,56 +63,13 @@ public class AspectAwareDamLinkFieldValidator extends AbstractAspectAwareFieldVa
 			return true;
 		}
 		
-		final FocusAreas focusAreas = readFocusAreas(node);
+		final FocusAreas focusAreas = FocusAreasUtil.readFocusAreas(node, node2BeanProcessor);
 		return isValidFocusAreas(focusAreas);
 	}
 	
 	private Node getNodeFromIdentifier(String value) {
 		final String fieldValue = identifierToPathConverter.convertToPresentation(value, String.class, null);
 		return getNodeFromPath(fieldValue);
-	}
-	
-	private FocusAreas readFocusAreas(Node parentNode) {
-		if(parentNode == null) {
-			return null;
-		}
-		
-		try {
-			final String nodePath = String.join("/", parentNode.getPath(), AspectAwareAssetTransformer.PROP_ASPECTS);
-			final Node node = getNodeFromPath(nodePath);
-			
-			if(node == null) {
-				return null;
-			}
-			
-			final FocusAreas focusAreas = new FocusAreas();
-			
-			Iterable<Node> aspectNodes = NodeUtil.getNodes(node);
-			for(Node aspectNode : aspectNodes) {
-				final FocusArea area = (FocusArea) node2BeanProcessor.toBean(aspectNode, FocusArea.class);
-				final String focusName = aspectNode.getName();
-				
-				if(area != null && area.isValid()) {
-					focusAreas.addArea(focusName, area);					
-				} else {
-					if (logger.isInfoEnabled()) {
-						logger.info("FocusArea at {}/{} is invalid", parentNode.getPath(), focusName);
-					}
-				}
-			}
-			
-			if(focusAreas.getAreas() != null && focusAreas.getAreas().size() > 0) {
-				return focusAreas;
-			} else {
-				return null;
-			}
-		} catch(RepositoryException e) {
-			logger.error("RepositoryException", e);
-			throw new RuntimeException("RepositoryException", e);
-		} catch(Node2BeanException n) {
-			logger.error("Cannot transform bean", n);
-			throw new RuntimeException("Transformation Error", n);
-		}
 	}
 	
 	private Node getNodeFromPath(String linkPath) {

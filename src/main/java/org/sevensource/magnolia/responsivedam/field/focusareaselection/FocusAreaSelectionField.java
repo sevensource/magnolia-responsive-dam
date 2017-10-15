@@ -7,7 +7,8 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang3.StringUtils;
-import org.sevensource.magnolia.responsivedam.field.FocusArea;
+import org.sevensource.magnolia.responsivedam.configuration.DamVariation;
+import org.sevensource.magnolia.responsivedam.focusarea.FocusArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,6 +25,8 @@ public class FocusAreaSelectionField extends ImageMediaField  {
 	private String selectionName;
 	private Double aspectRatio;
 	private transient FocusArea focusArea;
+	private int minWidth = 0;
+	private int minHeight = 0;
 	
     private SelectionArea selectedArea = null;
 
@@ -84,13 +87,30 @@ public class FocusAreaSelectionField extends ImageMediaField  {
             } else {
             	jcropField.select(new SelectionArea());
             }
+            
+        	jcropField.setMinWidth(minWidth);
+        	jcropField.setMinHeight(minHeight);
     	}
     }
     
-    public void setAreaSelectOptions(String name, Double aspectRatio, FocusArea preSelected) {
-    	this.selectionName = name;
-    	this.aspectRatio = aspectRatio;
+    public void setAreaSelectOptions(DamVariation variation, FocusArea preSelected) {
+    	this.selectionName = variation.getName();
+    	this.aspectRatio = variation.getRatio();
     	this.focusArea = preSelected;
+    	
+    	switch(variation.getConstraints().getMinimumSize().getDimension()) {
+    	case HEIGHT:
+    		this.minWidth = 0;
+    		this.minHeight = variation.getConstraints().getMaximumSize().getValue();
+    		break;
+    	case WIDTH:
+    		this.minWidth = variation.getConstraints().getMaximumSize().getValue();
+    		this.minHeight = 0;
+    		break;
+    	default:
+    		this.minWidth = 0;
+    		this.minHeight = 0;
+    	}
     	
     	updateJcropOptions();
     }

@@ -9,7 +9,7 @@ public class AspectAwareDamUploadFieldValidator extends AbstractAspectAwareField
 		
 	public AspectAwareDamUploadFieldValidator(ResponsiveDamModule responsiveDamModule, AspectAwareDamUploadFieldDefinition fieldDefinition, String errorMessage) {
 		super(errorMessage);
-		final DamVariationSet damVariationSet = responsiveDamModule.getConfiguredVariation(fieldDefinition.getVariation());
+		final DamVariationSet damVariationSet = responsiveDamModule.getConfiguredVariationSet(fieldDefinition.getVariationSet());
 		setDamVariationSet(damVariationSet);
 	}
 	

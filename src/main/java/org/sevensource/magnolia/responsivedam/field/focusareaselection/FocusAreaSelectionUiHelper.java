@@ -5,8 +5,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.sevensource.magnolia.responsivedam.configuration.DamVariation;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
-import org.sevensource.magnolia.responsivedam.configuration.DamVariationSpecification;
 import org.sevensource.magnolia.responsivedam.field.focusareaselection.action.SelectionAction;
 import org.sevensource.magnolia.responsivedam.field.focusareaselection.action.SelectionActionDefinition;
 
@@ -46,10 +46,10 @@ public class FocusAreaSelectionUiHelper {
 		actions.put(SCALE_TO_ACTUAL, buildActionDefinition("Zoom to actual size", "icon-view-in-actual-size", ScaleToActualSizeAction.class, new ScaleToActualSizeActionDefinition()));
 		actions.put(SCALE_TO_FIT, buildActionDefinition("Zoom to fit", "icon-zoom-to-fit", ScaleToFitAction.class, new ScaleToFitActionDefinition()));
 		
-		for(DamVariationSpecification spec : damVariationSet.getSpecifications()) {
-			final SelectionActionDefinition sad = new SelectionActionDefinition(spec.getName(), spec.getRatio());
-			actions.put(SELECT_PREFIX + spec.getName(), 
-					buildActionDefinition(spec.getName(), "icon-view", SelectionAction.class, sad));
+		for(DamVariation variation : damVariationSet.getVariations()) {
+			final SelectionActionDefinition sad = new SelectionActionDefinition(variation);
+			actions.put(SELECT_PREFIX + variation.getName(), 
+					buildActionDefinition(variation.getName(), "icon-view", SelectionAction.class, sad));
 		}
 		
 		return actions;
@@ -82,7 +82,7 @@ public class FocusAreaSelectionUiHelper {
 		utilityGroup.addItem(buildActionbarItemDefinition(SCALE_TO_FIT));
 		utilityGroup.addItem(buildActionbarItemDefinition(SCALE_TO_ACTUAL));
 		
-		for(DamVariationSpecification spec : damVariationSet.getSpecifications()) {
+		for(DamVariation spec : damVariationSet.getVariations()) {
 			aspectsGroup.addItem(buildActionbarItemDefinition(SELECT_PREFIX + spec.getName()));
 		}
 		

@@ -1,7 +1,5 @@
 package org.sevensource.magnolia.responsivedam.field;
 
-import org.sevensource.magnolia.responsivedam.field.AspectAwareUiUtils.InfoLabelStyle;
-
 import com.vaadin.ui.Label;
 
 public class AspectAwareUiUtils {

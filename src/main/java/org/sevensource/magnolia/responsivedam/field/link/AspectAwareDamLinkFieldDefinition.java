@@ -3,16 +3,16 @@ package org.sevensource.magnolia.responsivedam.field.link;
 import info.magnolia.ui.form.field.definition.LinkFieldDefinition;
 
 public class AspectAwareDamLinkFieldDefinition extends LinkFieldDefinition {
-	private String variation;
+	private String variationSet;
 	private String aspectsAppName;
 	
 	
-	public String getVariation() {
-		return variation;
+	public String getVariationSet() {
+		return variationSet;
 	}
 	
-	public void setVariation(String variation) {
-		this.variation = variation;
+	public void setVariationSet(String variation) {
+		this.variationSet = variation;
 	}
 	
 	public String getAspectsAppName() {

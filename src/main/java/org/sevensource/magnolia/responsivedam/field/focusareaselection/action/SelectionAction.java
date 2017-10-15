@@ -17,6 +17,6 @@ public class SelectionAction implements Action  {
 	
 	@Override
 	public void execute() throws ActionExecutionException {
-		presenter.setActiveSelectDefinition(definition.getAspectName(), definition.getAspectRatio());
+		presenter.setActiveSelectDefinition(definition.getVariation());
 	}
 }

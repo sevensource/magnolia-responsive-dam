@@ -3,11 +3,12 @@ package org.sevensource.magnolia.responsivedam.configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class DamVariationSpecification {
+public class DamVariation {
 	
-	private static final Logger logger = LoggerFactory.getLogger(DamVariationSpecification.class);
+	private static final Logger logger = LoggerFactory.getLogger(DamVariation.class);
 	
 	private String name;
+	private DamVariationSet variationSet;
 	private String aspect;
 	private Double ratio;
 	private final DamSizeConstraints constraints = new DamSizeConstraints();
@@ -41,6 +42,14 @@ public class DamVariationSpecification {
 
 	public DamSizeConstraints getConstraints() {
 		return constraints;
+	}
+	
+	public void setVariationSet(DamVariationSet variationSet) {
+		this.variationSet = variationSet;
+	}
+	
+	public DamVariationSet getVariationSet() {
+		return variationSet;
 	}
 
 	private static Double parseRatio(String value) {
