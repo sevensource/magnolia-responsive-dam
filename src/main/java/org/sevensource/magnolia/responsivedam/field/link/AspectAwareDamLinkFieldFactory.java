@@ -2,8 +2,8 @@ package org.sevensource.magnolia.responsivedam.field.link;
 
 import javax.inject.Inject;
 
-import org.sevensource.magnolia.responsivedam.ResponsiveDamModule;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
+import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.field.validation.AspectAwareDamLinkFieldValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,16 +32,16 @@ public class AspectAwareDamLinkFieldFactory extends LinkFieldFactory<AspectAware
 	private final Node2BeanProcessor node2BeanProcessor;
 	private final SimpleTranslator i18n;
 	
-	private final ResponsiveDamModule responsiveDamModule;
+	private final ResponsiveDamConfiguration responsiveDamConfiguration;
 	private final AspectAwareDamLinkFieldDefinition fieldDefinition;
 	
 	@Inject
-    public AspectAwareDamLinkFieldFactory(ResponsiveDamModule responsiveDamModule, AspectAwareDamLinkFieldDefinition definition, Item relatedFieldItem, UiContext uiContext, I18NAuthoringSupport i18nAuthoringSupport, AppController appController, ComponentProvider componentProvider,
+    public AspectAwareDamLinkFieldFactory(ResponsiveDamConfiguration responsiveDamConfiguration, AspectAwareDamLinkFieldDefinition definition, Item relatedFieldItem, UiContext uiContext, I18NAuthoringSupport i18nAuthoringSupport, AppController appController, ComponentProvider componentProvider,
     		FormDialogPresenterFactory formDialogPresenterFactory, final DialogDefinitionRegistry dialogDefinitionRegistry, SimpleTranslator i18n, Node2BeanProcessor node2BeanProcessor) {
 		
     	super(definition, relatedFieldItem, uiContext, i18nAuthoringSupport, appController, componentProvider);
     	
-    	this.responsiveDamModule = responsiveDamModule;
+    	this.responsiveDamConfiguration = responsiveDamConfiguration;
     	this.fieldDefinition = definition;
     	
 		this.formDialogPresenterFactory = formDialogPresenterFactory;
@@ -56,7 +56,7 @@ public class AspectAwareDamLinkFieldFactory extends LinkFieldFactory<AspectAware
     protected Field<String> createFieldComponent() {
     	final LinkField linkField = (LinkField) super.createFieldComponent();
     	
-    	final DamVariationSet variationSet = responsiveDamModule.getConfiguredVariationSet(definition.getVariationSet());
+    	final DamVariationSet variationSet = responsiveDamConfiguration.getVariationSet(definition.getVariationSet());
     	
     	final AspectAwareDamLinkField field = new AspectAwareDamLinkField
     			(linkField, formDialogPresenterFactory, dialogDefinitionRegistry, uiContext, i18n);
@@ -66,7 +66,7 @@ public class AspectAwareDamLinkFieldFactory extends LinkFieldFactory<AspectAware
     	field.setVariationSet(variationSet);
     	
     	final String errorMessage = i18n.translate(AspectAwareDamLinkField.aspectsIncompleteErrorTxt);
-    	AspectAwareDamLinkFieldValidator validator = new AspectAwareDamLinkFieldValidator(responsiveDamModule, definition, node2BeanProcessor, errorMessage);
+    	AspectAwareDamLinkFieldValidator validator = new AspectAwareDamLinkFieldValidator(responsiveDamConfiguration, definition, node2BeanProcessor, errorMessage);
     	validator.setWorkspace(fieldDefinition.getTargetWorkspace());
     	
 		field.addValidator(validator);

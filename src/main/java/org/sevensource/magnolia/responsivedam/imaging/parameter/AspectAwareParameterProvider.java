@@ -6,9 +6,9 @@ import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.sevensource.magnolia.responsivedam.ResponsiveDamModule;
 import org.sevensource.magnolia.responsivedam.ResponsiveDamNodeUtil;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariation;
+import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.configuration.SizeSpecification;
 import org.sevensource.magnolia.responsivedam.focusarea.FocusArea;
 import org.sevensource.magnolia.responsivedam.focusarea.FocusAreasUtil;
@@ -42,7 +42,7 @@ public class AspectAwareParameterProvider implements ParameterProvider<AspectAwa
 	private final AspectAwareParameter parameter;
     
 	
-	public AspectAwareParameterProvider(ResponsiveDamRendition rendition, ResponsiveDamModule responsiveDamModule, Node2BeanProcessor node2BeanProcessor) throws RepositoryException {
+	public AspectAwareParameterProvider(ResponsiveDamRendition rendition, ResponsiveDamConfiguration responsiveDamConfiguration, Node2BeanProcessor node2BeanProcessor) throws RepositoryException {
 		
 		this.contentNode = ResponsiveDamNodeUtil.getContentNode(rendition.getNode());
 		this.containerNode = ResponsiveDamNodeUtil.getContainerNode(contentNode);
@@ -53,7 +53,7 @@ public class AspectAwareParameterProvider implements ParameterProvider<AspectAwa
         	throw new IllegalArgumentException(msg);
         }
         
-        final DamVariation variation = responsiveDamModule.getConfiguredVariation(rendition.getVariationSet(), rendition.getVariation());
+        final DamVariation variation = responsiveDamConfiguration.getVariation(rendition.getVariationSet(), rendition.getVariation());
         if(variation == null) {
         	final String msg = String.format("No damVariation with name [%s] found for variationSet [%s]", requestedVariation, requestedVariationSet);
         	throw new IllegalArgumentException(msg);
@@ -67,7 +67,7 @@ public class AspectAwareParameterProvider implements ParameterProvider<AspectAwa
 				rendition.getOutputFormat());
 	}
 	
-    public AspectAwareParameterProvider(String uri, ResponsiveDamModule responsiveDamModule, Node2BeanProcessor node2BeanProcessor) throws RepositoryException {
+    public AspectAwareParameterProvider(String uri, ResponsiveDamConfiguration responsiveDamConfiguration, Node2BeanProcessor node2BeanProcessor) throws RepositoryException {
 
     	parseRequestedParametersFromUri(uri);
         
@@ -76,14 +76,14 @@ public class AspectAwareParameterProvider implements ParameterProvider<AspectAwa
         this.containerNode = ResponsiveDamNodeUtil.getContainerNode(contentNode);
         
 
-        final DamVariation variation = responsiveDamModule.getConfiguredVariation(requestedVariationSet, requestedVariation);
+        final DamVariation variation = responsiveDamConfiguration.getVariation(requestedVariationSet, requestedVariation);
         if(variation == null) {
         	final String msg = String.format("No damVariation with name [%s] found for variationSet [%s]", requestedVariation, requestedVariationSet);
         	throw new IllegalArgumentException(msg);
         }
 
         
-        final ResponsiveDamVariation responsiveDamVariation = new ResponsiveDamVariation(contentNode, variation);
+        final ResponsiveDamVariation responsiveDamVariation = new ResponsiveDamVariation(contentNode, variation, responsiveDamConfiguration);
         
         final SizeSpecification requestedSizeSpecification = SizeSpecification.of(requestedSize);
         if(! responsiveDamVariation.getSizes().contains(requestedSizeSpecification)) {

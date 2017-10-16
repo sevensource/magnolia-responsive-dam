@@ -1,15 +1,15 @@
 package org.sevensource.magnolia.responsivedam.field.validation;
 
-import org.sevensource.magnolia.responsivedam.ResponsiveDamModule;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
+import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.field.upload.AspectAwareAssetUploadReceiver;
 import org.sevensource.magnolia.responsivedam.field.upload.AspectAwareDamUploadFieldDefinition;
 
 public class AspectAwareDamUploadFieldValidator extends AbstractAspectAwareFieldValidator<AspectAwareAssetUploadReceiver> {
 		
-	public AspectAwareDamUploadFieldValidator(ResponsiveDamModule responsiveDamModule, AspectAwareDamUploadFieldDefinition fieldDefinition, String errorMessage) {
+	public AspectAwareDamUploadFieldValidator(ResponsiveDamConfiguration responsiveDamConfiguration, AspectAwareDamUploadFieldDefinition fieldDefinition, String errorMessage) {
 		super(errorMessage);
-		final DamVariationSet damVariationSet = responsiveDamModule.getConfiguredVariationSet(fieldDefinition.getVariationSet());
+		final DamVariationSet damVariationSet = responsiveDamConfiguration.getVariationSet(fieldDefinition.getVariationSet());
 		setDamVariationSet(damVariationSet);
 	}
 	

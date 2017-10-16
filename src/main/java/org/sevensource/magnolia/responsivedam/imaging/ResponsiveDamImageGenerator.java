@@ -1,6 +1,7 @@
 package org.sevensource.magnolia.responsivedam.imaging;
 
 import org.sevensource.magnolia.responsivedam.imaging.operation.AspectAwareCrop;
+import org.sevensource.magnolia.responsivedam.imaging.operation.AspectAwareResample;
 import org.sevensource.magnolia.responsivedam.imaging.operation.FromAspectAwareBinaryNode;
 import org.sevensource.magnolia.responsivedam.imaging.parameter.AspectAwareParameter;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ public class ResponsiveDamImageGenerator extends ImageOperationChain<ParameterPr
     	super();
     	getOperations().add(new FromAspectAwareBinaryNode());
     	getOperations().add(new AspectAwareCrop());
+    	getOperations().add(new AspectAwareResample());
     	setName(GENERATOR_NAME);
 	}
 

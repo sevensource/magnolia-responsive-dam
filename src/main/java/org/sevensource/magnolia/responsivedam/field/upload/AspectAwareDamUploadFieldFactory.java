@@ -2,7 +2,7 @@ package org.sevensource.magnolia.responsivedam.field.upload;
 
 import javax.inject.Inject;
 
-import org.sevensource.magnolia.responsivedam.ResponsiveDamModule;
+import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.field.validation.AspectAwareDamUploadFieldValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,7 +25,7 @@ public class AspectAwareDamUploadFieldFactory extends AbstractFieldFactory<Aspec
 
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareDamUploadFieldFactory.class);
 	
-	private final ResponsiveDamModule responsiveDamModule;
+	private final ResponsiveDamConfiguration responsiveDamConfiguration;
     private final MediaEditorPresenterFactory mediaEditorFactory;
     private final UiContext uiContext;
     private final ImageProvider imageProvider;
@@ -35,13 +35,13 @@ public class AspectAwareDamUploadFieldFactory extends AbstractFieldFactory<Aspec
     private final ActionbarPresenter actionbarPresenter;
 
     @Inject
-	public AspectAwareDamUploadFieldFactory(ResponsiveDamModule responsiveDamModule, AspectAwareDamUploadFieldDefinition definition,
+	public AspectAwareDamUploadFieldFactory(ResponsiveDamConfiguration responsiveDamConfiguration, AspectAwareDamUploadFieldDefinition definition,
 			Item relatedFieldItem, UiContext uiContext, I18NAuthoringSupport i18nAuthoringSupport, ImageProvider imageProvider,
 			MediaEditorPresenterFactory mediaEditorFactory, ComponentProvider componentProvider,
 			SimpleTranslator i18n, I18nizer i18nizer, ActionbarPresenter actionbarPresenter) {
     	super(definition, relatedFieldItem, uiContext, i18nAuthoringSupport);
 		
-    	this.responsiveDamModule = responsiveDamModule;
+    	this.responsiveDamConfiguration = responsiveDamConfiguration;
     	
         this.mediaEditorFactory = mediaEditorFactory;
         this.uiContext = uiContext;
@@ -55,9 +55,9 @@ public class AspectAwareDamUploadFieldFactory extends AbstractFieldFactory<Aspec
 
 	@Override
 	protected Field<AspectAwareAssetUploadReceiver> createFieldComponent() {
-		AspectAwareDamUploadField field = new AspectAwareDamUploadField(responsiveDamModule, imageProvider, uiContext, mediaEditorFactory, componentProvider, definition, i18n, i18nizer, actionbarPresenter);
+		AspectAwareDamUploadField field = new AspectAwareDamUploadField(responsiveDamConfiguration, imageProvider, uiContext, mediaEditorFactory, componentProvider, definition, i18n, i18nizer, actionbarPresenter);
 		final String errorMessage = i18n.translate(AspectAwareDamUploadField.aspectsIncompleteErrorTxt);
-		field.addValidator(new AspectAwareDamUploadFieldValidator(responsiveDamModule, definition, errorMessage));
+		field.addValidator(new AspectAwareDamUploadFieldValidator(responsiveDamConfiguration, definition, errorMessage));
 		return field;
 	}
 	

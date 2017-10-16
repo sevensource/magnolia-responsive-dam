@@ -1,6 +1,8 @@
 package org.sevensource.magnolia.responsivedam;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -11,11 +13,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.sevensource.magnolia.responsivedam.configuration.DamSizeConstraints;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariation;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
+import org.sevensource.magnolia.responsivedam.configuration.OutputFormatMapping;
+import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.configuration.SizeSpecification;
 import org.sevensource.magnolia.responsivedam.configuration.SizeSpecification.SizeSpecificationConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.inject.Inject;
+
+import info.magnolia.imaging.OutputFormat;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 
@@ -23,12 +30,30 @@ public class ResponsiveDamModule implements ModuleLifecycle {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ResponsiveDamModule.class);
 	
-
 	private Map<String, Map<String, Map<String, String>>> variations;
 	private DamSizeConstraints defaultConstraint;
+	private Map<String, Map<String, Object>> outputFormatMappings;
 	
-	private Set<DamVariationSet> configuredVariationSets;
+	private final ResponsiveDamConfiguration responsiveDamConfiguration;
 
+	@Inject
+	public ResponsiveDamModule(ResponsiveDamConfiguration responsiveDamConfiguration) {
+		this.responsiveDamConfiguration = responsiveDamConfiguration;
+	}
+	
+	@Override
+	public void start(ModuleLifecycleContext moduleLifecycleContext) {
+		final Set<DamVariationSet> variationSets = convertVariations(this.variations, this.defaultConstraint);
+		responsiveDamConfiguration.setVariationSets(variationSets);
+		
+		final List<OutputFormatMapping> outputFormatMappingsList = convertOutputFormatMappings(outputFormatMappings);
+		responsiveDamConfiguration.setOutputFormatMappings(outputFormatMappingsList);
+	}
+	
+	@Override
+	public void stop(ModuleLifecycleContext moduleLifecycleContext) {
+		//no-op
+	}
 	
 	public DamSizeConstraints getDefaultConstraint() {
 		return defaultConstraint;
@@ -46,72 +71,41 @@ public class ResponsiveDamModule implements ModuleLifecycle {
 		this.variations = variations;
 	}
 	
-	///////
-	
-	public void setConfiguredVariationSets(Set<DamVariationSet> variationSets) {
-		this.configuredVariationSets = variationSets;
+
+	public void setOutputFormatMappings(Map<String, Map<String, Object>> outputFormatMappings) {
+		this.outputFormatMappings = outputFormatMappings;
 	}
 	
-	public Set<DamVariationSet> getConfiguredVariationSets() {
-		return configuredVariationSets;
+	public Map<String, Map<String, Object>> getOutputFormatMappings() {
+		return outputFormatMappings;
 	}
 	
-	public DamVariationSet getConfiguredVariationSet(String name) {
-		if(StringUtils.isEmpty(name)) {
-			return null;
-		}
+	private static List<OutputFormatMapping> convertOutputFormatMappings(Map<String, Map<String, Object>> outputFormatMappings) {
+		final List<OutputFormatMapping> retVal = new ArrayList<>(5);
 		
-		return configuredVariationSets
-			.stream()
-			.filter(i -> name.equals(i.getName()))
-			.findFirst()
-			.orElse(null);		
-	}
-	
-	public DamVariation getConfiguredVariation(String variationSet, String variation) {
-		final DamVariationSet set = getConfiguredVariationSet(variationSet);
-		return set==null ? null : set.getVariation(variation);
-	}
-	
-	public DamVariation getAnyConfiguredVariation(String variationName) {
-		
-		DamVariation selectedVariation = null;
-		
-		for(DamVariationSet variationSet : configuredVariationSets) {
-			final DamVariation variation = variationSet.getVariation(variationName);
-			if(variation != null) {
-				if(selectedVariation == null) {
-					selectedVariation = variation;
-				} else {
-					final int selectedSize = selectedVariation.getConstraints().getMinimumSize().getValue();
-					final int thisSize = variation.getConstraints().getMinimumSize().getValue();
-					if(selectedSize < thisSize) {
-						selectedVariation = variation;	
-					}
+		for(Entry<String, Map<String, Object>> entry : outputFormatMappings.entrySet()) {
+			final String name = entry.getKey();
+			final Map<String, Object> mappingEntry = entry.getValue();
+			
+			final String sourceMimeType = (String) mappingEntry.get("source");
+			OutputFormatMapping mapping = new OutputFormatMapping(name, sourceMimeType);
+			retVal.add(mapping);
+			
+			final Map<String, Map<String, String>> outputMappings = (Map<String, Map<String, String>>) mappingEntry.get("output");
+			for(Entry<String, Map<String, String>> outputMappingEntry : outputMappings.entrySet()) {
+				final String outputName = outputMappingEntry.getKey();
+				try {				
+					OutputFormat outputFormat = new OutputFormat();
+					BeanUtils.populate(outputFormat, outputMappingEntry.getValue());
+					mapping.addOutputFormat(outputFormat);
+				} catch(Exception e) {
+					logger.error("Error whole parsing responsive outputFormatMappings with name {}", outputName, e);
+					throw new IllegalArgumentException(e);
 				}
 			}
 		}
 		
-		return selectedVariation;
-	}
-	
-	
-	@Override
-	public void start(ModuleLifecycleContext moduleLifecycleContext) {
-		
-		if(configuredVariationSets != null) {
-			this.configuredVariationSets.clear();
-		} else {
-			this.configuredVariationSets = new HashSet<>();
-		}
-
-		this.configuredVariationSets.addAll(convertVariations(this.variations, this.defaultConstraint));
-	}
-	
-	
-	@Override
-	public void stop(ModuleLifecycleContext moduleLifecycleContext) {
-		//no-op
+		return retVal;
 	}
 	
 	

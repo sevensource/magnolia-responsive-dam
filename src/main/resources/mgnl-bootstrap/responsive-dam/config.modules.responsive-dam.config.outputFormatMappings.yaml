@@ -1,0 +1,33 @@
+'outputFormatMappings':
+  'jpg':
+    'source': 'image/jpeg'
+    'output':
+      'jpg':
+        'formatName': 'jpg'
+        'progressive': true
+        'quality': 85
+  'gif':
+    'source': 'image/gif'
+    'output':
+      'gif':
+        'formatName': 'gif'
+        'compressionType': 'lzw'
+  'png':
+    'source': 'image/png'
+    'output':
+      'png':
+        'formatName': 'png'
+  'tiff':
+    'source': 'image/tiff'
+    'output':
+      'jpg':
+        'formatName': 'jpg'
+        'progressive': true
+        'quality': 85
+  'default':
+    'source': 'image/*'
+    'output':
+      'jpg':
+        'formatName': 'jpg'
+        'progressive': true
+        'quality': 85
