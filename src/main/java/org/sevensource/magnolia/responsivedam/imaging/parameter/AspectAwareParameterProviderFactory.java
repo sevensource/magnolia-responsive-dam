@@ -7,7 +7,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
-import org.sevensource.magnolia.responsivedam.ResponsiveDamModule;
+import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.imaging.ResponsiveDamCachingStrategy;
 import org.sevensource.magnolia.responsivedam.imaging.ResponsiveDamRendition;
 
@@ -23,7 +23,7 @@ public class AspectAwareParameterProviderFactory<T> implements ParameterProvider
 	
 	private final Node2BeanProcessor node2BeanProcessor;
 	private final ComponentProvider componentProvider;
-	private final AtomicReference<ResponsiveDamModule> responsiveDamReference = new AtomicReference<>(null);  
+	private final AtomicReference<ResponsiveDamConfiguration> responsiveDamReference = new AtomicReference<>(null);  
 
 	
 	@Inject
@@ -53,7 +53,7 @@ public class AspectAwareParameterProviderFactory<T> implements ParameterProvider
     	final String uri = StringUtils.substringAfter(pathInfo, "/");
 
         try {
-            return new AspectAwareParameterProvider(uri, getResponsiveDamModule(), node2BeanProcessor);
+            return new AspectAwareParameterProvider(uri, getResponsiveDamConfiguration(), node2BeanProcessor);
         } catch (RepositoryException e) {
             throw new RuntimeException(String.format("Can't create a %s object for URI [%s]", AspectAwareParameterProvider.class.getName(), uri), e);
         }
@@ -61,20 +61,20 @@ public class AspectAwareParameterProviderFactory<T> implements ParameterProvider
     
     private ParameterProvider<AspectAwareParameter> newParameterProviderForRendition(ResponsiveDamRendition rendition) {
         try {
-        	return new AspectAwareParameterProvider(rendition, getResponsiveDamModule(), node2BeanProcessor);
+        	return new AspectAwareParameterProvider(rendition, getResponsiveDamConfiguration(), node2BeanProcessor);
         } catch (RepositoryException e) {
             throw new RuntimeException(String.format("Can't create a %s object for Rendition [%s]", AspectAwareParameterProvider.class.getName(), rendition), e);
         }
     }
     
-    private ResponsiveDamModule getResponsiveDamModule() {
-    	ResponsiveDamModule responsiveDamModule = responsiveDamReference.get();
-    	if(responsiveDamModule == null) {
-    		responsiveDamModule = componentProvider.getComponent(ResponsiveDamModule.class);
-    		responsiveDamReference.compareAndSet(null, responsiveDamModule);
+    private ResponsiveDamConfiguration getResponsiveDamConfiguration() {
+    	ResponsiveDamConfiguration responsiveDamConfiguration = responsiveDamReference.get();
+    	if(responsiveDamConfiguration == null) {
+    		responsiveDamConfiguration = componentProvider.getComponent(ResponsiveDamConfiguration.class);
+    		responsiveDamReference.compareAndSet(null, responsiveDamConfiguration);
     		return responsiveDamReference.get();
     	} else {
-    		return responsiveDamModule;
+    		return responsiveDamConfiguration;
     	}
     }
     

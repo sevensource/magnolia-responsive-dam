@@ -14,6 +14,12 @@
       <implementation>org.sevensource.magnolia.responsivedam.templating.ResponsiveDamTemplatingFunctions</implementation>
       <scope>singleton</scope>
     </component>
+    
+    <component>
+      <type>org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration</type>
+      <implementation>org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration</implementation>
+      <scope>singleton</scope>
+    </component>
   </components>
 
   <dependencies>

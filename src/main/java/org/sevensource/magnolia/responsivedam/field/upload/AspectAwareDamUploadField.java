@@ -7,9 +7,9 @@ import java.io.InputStream;
 
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.sevensource.magnolia.responsivedam.ResponsiveDamModule;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariation;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
+import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.field.AspectAwareUiUtils;
 import org.sevensource.magnolia.responsivedam.field.AspectAwareUiUtils.InfoLabelStyle;
 import org.sevensource.magnolia.responsivedam.field.focusareaselection.FocusAreaSelectionPresenter;
@@ -51,7 +51,7 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
 	static final String aspectsEmptyWarnTxt = "field.aspectUpload.warn.empty";
 	static final String aspectsSetOkTxt = "field.aspectUpload.note.valid";
 	
-	private final transient ResponsiveDamModule responsiveDamModule;
+	private final transient ResponsiveDamConfiguration responsiveDamConfiguration;
 	private final transient AspectAwareDamUploadFieldDefinition definition;
 	private final transient SimpleTranslator i18n;
 	private final transient ComponentProvider componentProvider;
@@ -62,14 +62,14 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
 	private Label infoLabel;
 	
 	
-	public AspectAwareDamUploadField(ResponsiveDamModule responsiveDamModule, 
+	public AspectAwareDamUploadField(ResponsiveDamConfiguration responsiveDamConfiguration, 
 			ImageProvider imageProvider, UiContext uiContext,
 			MediaEditorPresenterFactory mediaEditorFactory, ComponentProvider componentProvider,
 			AspectAwareDamUploadFieldDefinition definition, SimpleTranslator i18n, I18nizer i18nizer,
 			ActionbarPresenter actionbarPresenter) {
 		super(imageProvider, uiContext, mediaEditorFactory, componentProvider, definition, i18n);
 		
-		this.responsiveDamModule = responsiveDamModule;
+		this.responsiveDamConfiguration = responsiveDamConfiguration;
 		
 		this.definition = definition;
 		this.componentProvider = componentProvider;
@@ -159,7 +159,7 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
 			return false;
 		}
 		
-    	if(responsiveDamModule.getConfiguredVariationSet(definition.getVariationSet()) == null) {
+    	if(responsiveDamConfiguration.getVariationSet(definition.getVariationSet()) == null) {
     		throw new IllegalArgumentException("Unknown variationset with name " + definition.getVariationSet());
     	}
     	
@@ -206,12 +206,12 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
 		
 		final DamVariationSet damVariationSet;
 		if(! StringUtils.isEmpty(definition.getVariationSet())) {
-			damVariationSet = responsiveDamModule.getConfiguredVariationSet(definition.getVariationSet());
+			damVariationSet = responsiveDamConfiguration.getVariationSet(definition.getVariationSet());
 		} else if(definition.isUseExistingFocusAreas()) {
 			damVariationSet = new DamVariationSet(null);
 			
 			for(String areaName : val.getAreas().keySet()) {
-				final DamVariation variation = responsiveDamModule.getAnyConfiguredVariation(areaName);
+				final DamVariation variation = responsiveDamConfiguration.getAnyVariation(areaName);
 				if(variation != null) {
 					damVariationSet.addVariation(variation);
 				}

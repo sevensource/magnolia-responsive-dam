@@ -13,6 +13,7 @@ import javax.jcr.RepositoryException;
 import org.sevensource.magnolia.responsivedam.ResponsiveDamNodeUtil;
 import org.sevensource.magnolia.responsivedam.configuration.DamSizeConstraints;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariation;
+import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.configuration.SizeSpecification;
 import org.sevensource.magnolia.responsivedam.configuration.SizeSpecification.ResponsiveDamSizeDimension;
 import org.slf4j.Logger;
@@ -36,7 +37,7 @@ public class ResponsiveDamVariation {
 	private final List<OutputFormat> outputFormats;
 	private final List<ResponsiveDamRendition> renditions;
 	
-	public ResponsiveDamVariation(Node node, DamVariation damVariation) {
+	public ResponsiveDamVariation(Node node, DamVariation damVariation, ResponsiveDamConfiguration responsiveDamConfiguration) {
 		
 		final Node contentNode;
 		try {
@@ -56,7 +57,7 @@ public class ResponsiveDamVariation {
         
         this.constraints = damVariation.getConstraints();
         this.sizes = initSizes();
-		this.outputFormats = ResponsiveDamOutputFormat.getOutputFormatsByMimeType(mimeType);
+		this.outputFormats = responsiveDamConfiguration.getOutputFormatsByMimeType(mimeType);
 		
 		this.renditions = new ArrayList<>();
 		

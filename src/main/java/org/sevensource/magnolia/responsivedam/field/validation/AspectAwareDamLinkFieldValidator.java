@@ -5,8 +5,8 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.sevensource.magnolia.responsivedam.ResponsiveDamModule;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
+import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.field.link.AspectAwareDamLinkFieldDefinition;
 import org.sevensource.magnolia.responsivedam.focusarea.FocusAreas;
 import org.sevensource.magnolia.responsivedam.focusarea.FocusAreasUtil;
@@ -27,9 +27,9 @@ public class AspectAwareDamLinkFieldValidator extends AbstractAspectAwareFieldVa
 	private final transient Node2BeanProcessor node2BeanProcessor;
 	private String workspace;
 	
-	public AspectAwareDamLinkFieldValidator(ResponsiveDamModule responsiveDamModule, AspectAwareDamLinkFieldDefinition fieldDefinition, Node2BeanProcessor node2BeanProcessor, String errorMessage) {
+	public AspectAwareDamLinkFieldValidator(ResponsiveDamConfiguration responsiveDamConfiguration, AspectAwareDamLinkFieldDefinition fieldDefinition, Node2BeanProcessor node2BeanProcessor, String errorMessage) {
 		super(errorMessage);
-		final DamVariationSet damVariationSet = responsiveDamModule.getConfiguredVariationSet(fieldDefinition.getVariationSet());
+		final DamVariationSet damVariationSet = responsiveDamConfiguration.getVariationSet(fieldDefinition.getVariationSet());
 		setDamVariationSet(damVariationSet);
 		
 		this.identifierToPathConverter = fieldDefinition.getIdentifierToPathConverter();
