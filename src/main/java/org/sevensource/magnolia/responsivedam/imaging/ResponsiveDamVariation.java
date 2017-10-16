@@ -32,7 +32,6 @@ public class ResponsiveDamVariation {
 	private final String mimeType;
 	private final DamSizeConstraints constraints;
 	
-	
 	private final List<SizeSpecification> sizes;
 	private final List<OutputFormat> outputFormats;
 	private final List<ResponsiveDamRendition> renditions;
@@ -73,15 +72,28 @@ public class ResponsiveDamVariation {
 		return renditions;
 	}
 	
-	public List<ResponsiveDamRendition> getRenditionsByOutputFormat(String outputFormat) {
+	public List<ResponsiveDamRendition> getRenditionsByOutputFormat(OutputFormat outputFormat) {
+		return getRenditionsByOutputFormat(outputFormat.getFormatName());
+	}
+	
+	public List<ResponsiveDamRendition> getRenditionsByOutputFormat(String outputFormatName) {
 		return renditions
 				.stream()
-				.filter(r -> r.getOutputFormat().getFormatName().equals(outputFormat))
+				.filter(r -> r.getOutputFormat().getFormatName().equalsIgnoreCase(outputFormatName))
 				.collect(Collectors.toList());
 	}
 	
 	public ResponsiveDamRendition getDefaultRendition() {
-		return renditions.get(0);
+		return renditions.isEmpty() ? null : renditions.get(0);
+	}
+	
+	public ResponsiveDamRendition getDefaultRendition(OutputFormat outputFormat) {
+		for(ResponsiveDamRendition rendition : renditions) {
+			if(rendition.getOutputFormat().getFormatName().equalsIgnoreCase(outputFormat.getFormatName())) {
+				return rendition;
+			}
+		}
+		return null;
 	}
 	
 	public ResponsiveDamRendition getDefaultRenditionForSize(Integer size) {
@@ -102,6 +114,10 @@ public class ResponsiveDamVariation {
 	
 	public List<OutputFormat> getOutputFormats() {
 		return outputFormats;
+	}
+	
+	public OutputFormat getPrimaryOutputFormat() {
+		return outputFormats.isEmpty() ? null : outputFormats.get(0);
 	}
 
 	private List<SizeSpecification> initSizes() {
