@@ -8,56 +8,18 @@ import org.sevensource.magnolia.responsivedam.imaging.parameter.AspectAwareParam
 
 import info.magnolia.imaging.ImagingException;
 import info.magnolia.imaging.ParameterProvider;
+import info.magnolia.imaging.operations.ImageOperation;
 import info.magnolia.imaging.operations.cropresize.AbstractCropAndResize;
 import info.magnolia.imaging.operations.cropresize.Coords;
 import info.magnolia.imaging.operations.cropresize.Size;
 import info.magnolia.imaging.operations.cropresize.resizers.MultiStepResizer;
 
-public class AspectAwareCrop extends AbstractCropAndResize<ParameterProvider<AspectAwareParameter>>  {
-
-	public AspectAwareCrop() {
-		final MultiStepResizer resizer = new MultiStepResizer();
-		resizer.setInterpolation("bilinear");
-		setResizer(resizer);
-	}
-	
-	@Override
-	protected Coords getCroopCoords(BufferedImage source, ParameterProvider<AspectAwareParameter> params) throws ImagingException {
-		final FocusArea focusArea = params.getParameter().getFocusArea();
-
-		return new Coords(
-				focusArea.getX(),
-				focusArea.getY(),
-				focusArea.getX() + focusArea.getWidth(),
-				focusArea.getY() + focusArea.getHeight());
-	}
+public class AspectAwareCrop implements ImageOperation<ParameterProvider<AspectAwareParameter>>  {
 
 	@Override
-	protected Size getEffectiveTargetSize(BufferedImage source, Coords cropCoords,
-			ParameterProvider<AspectAwareParameter> params) {
-		
+	public BufferedImage apply(BufferedImage source, ParameterProvider<AspectAwareParameter> params)
+			throws ImagingException {
 		final FocusArea focusArea = params.getParameter().getFocusArea();
-		final SizeSpecification spec = params.getParameter().getRequestedSize();
-		
-		int width = 0;
-		int height = 0;
-		
-		switch(spec.getDimension()) {
-		case WIDTH:
-			width = spec.getValue();
-			height = (int) Math.round( (double) focusArea.getHeight() / ((double) focusArea.getWidth() / (double) width) );
-			break;
-		case HEIGHT:
-			height = spec.getValue();
-			width = (int) Math.round( (double) focusArea.getWidth() / ((double) focusArea.getHeight() / (double) height) );
-			break;
-		default:
-			throw new IllegalArgumentException("Unknown dimension");
-		}
-		
-		return new Size(width, height);
+		return source.getSubimage(focusArea.getX(), focusArea.getY(), focusArea.getWidth(), focusArea.getHeight());
 	}
-
-
-
 }

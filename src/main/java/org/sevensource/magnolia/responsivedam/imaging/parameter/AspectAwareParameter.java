@@ -17,7 +17,7 @@ public class AspectAwareParameter {
     private final Node node;
     private final DamVariation damVariation;
     private final FocusArea focusArea;
-    private final SizeSpecification requestedSize;
+    private final SizeSpecification size;
     private final OutputFormat outputFormat;
     
 
@@ -25,7 +25,7 @@ public class AspectAwareParameter {
     	this.node = node;
     	this.damVariation = variationSpecification;
     	this.focusArea = focusArea;
-    	this.requestedSize = requestedSize;
+    	this.size = requestedSize;
     	this.outputFormat = outputFormat;
     }
 
@@ -45,8 +45,8 @@ public class AspectAwareParameter {
 		return focusArea;
 	}
     
-    public SizeSpecification getRequestedSize() {
-		return requestedSize;
+    public SizeSpecification getSize() {
+		return size;
 	}
 
     public String getCachePath() {
@@ -55,7 +55,7 @@ public class AspectAwareParameter {
         	return "/" + String.join("/",
         			damVariation.getVariationSet().getName(),
         			damVariation.getName(),
-        			requestedSize.toString(),
+        			size.toString(),
         			outputFormat.getFormatName(),
         			node.getSession().getWorkspace().getName()
         			) + 
