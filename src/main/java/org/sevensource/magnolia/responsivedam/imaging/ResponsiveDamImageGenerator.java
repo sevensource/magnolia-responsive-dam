@@ -14,20 +14,20 @@ import info.magnolia.imaging.operations.ImageOperationChain;
 public class ResponsiveDamImageGenerator extends ImageOperationChain<ParameterProvider<AspectAwareParameter>> {
 
 	private static final Logger logger = LoggerFactory.getLogger(ResponsiveDamImageGenerator.class);
-	
 
-    public static final String GENERATOR_NAME = "rd";
-    
-    public ResponsiveDamImageGenerator() {
-    	super();
-    	getOperations().add(new FromAspectAwareBinaryNode());
-    	getOperations().add(new AspectAwareCrop());
-    	getOperations().add(new AspectAwareResample());
-    	setName(GENERATOR_NAME);
+
+	public static final String GENERATOR_NAME = "rd";
+
+	public ResponsiveDamImageGenerator() {
+		super();
+		getOperations().add(new FromAspectAwareBinaryNode());
+		getOperations().add(new AspectAwareCrop());
+		getOperations().add(new AspectAwareResample());
+		setName(GENERATOR_NAME);
 	}
 
-    @Override
-    public OutputFormat getOutputFormat(ParameterProvider<AspectAwareParameter> params) {
-    	return params.getParameter().getOutputFormat();
-    }
+	@Override
+	public OutputFormat getOutputFormat(ParameterProvider<AspectAwareParameter> params) {
+		return params.getParameter().getOutputFormat();
+	}
 }

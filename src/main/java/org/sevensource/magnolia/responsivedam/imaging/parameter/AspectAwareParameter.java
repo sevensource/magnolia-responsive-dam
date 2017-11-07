@@ -14,55 +14,55 @@ import info.magnolia.imaging.OutputFormat;
 
 public class AspectAwareParameter {
 
-    private final Node node;
-    private final DamVariation damVariation;
-    private final FocusArea focusArea;
-    private final SizeSpecification size;
-    private final OutputFormat outputFormat;
-    
+	private final Node node;
+	private final DamVariation damVariation;
+	private final FocusArea focusArea;
+	private final SizeSpecification size;
+	private final OutputFormat outputFormat;
 
-    public AspectAwareParameter(Node node, DamVariation variationSpecification, FocusArea focusArea, SizeSpecification requestedSize, OutputFormat outputFormat) {
-    	this.node = node;
-    	this.damVariation = variationSpecification;
-    	this.focusArea = focusArea;
-    	this.size = requestedSize;
-    	this.outputFormat = outputFormat;
-    }
 
-    public Node getNode() {
-        return node;
-    }
-    
-    public OutputFormat getOutputFormat() {
+	public AspectAwareParameter(Node node, DamVariation variationSpecification, FocusArea focusArea, SizeSpecification requestedSize, OutputFormat outputFormat) {
+		this.node = node;
+		this.damVariation = variationSpecification;
+		this.focusArea = focusArea;
+		this.size = requestedSize;
+		this.outputFormat = outputFormat;
+	}
+
+	public Node getNode() {
+		return node;
+	}
+
+	public OutputFormat getOutputFormat() {
 		return outputFormat;
 	}
 
-    public Binary getBinary() throws RepositoryException {
-        return node.getProperty(JcrConstants.JCR_DATA).getBinary();
-    }
-    
-    public FocusArea getFocusArea() {
+	public Binary getBinary() throws RepositoryException {
+		return node.getProperty(JcrConstants.JCR_DATA).getBinary();
+	}
+
+	public FocusArea getFocusArea() {
 		return focusArea;
 	}
-    
-    public SizeSpecification getSize() {
+
+	public SizeSpecification getSize() {
 		return size;
 	}
 
-    public String getCachePath() {
-        try {
-        	
-        	return "/" + String.join("/",
-        			damVariation.getVariationSet().getName(),
-        			damVariation.getName(),
-        			size.toString(),
-        			outputFormat.getFormatName(),
-        			node.getSession().getWorkspace().getName()
-        			) + 
-        			node.getPath();
-        	
-        } catch (RepositoryException e) {
-        	throw new RuntimeException("Cannot generate cache path", e);
-        }
-    }
+	public String getCachePath() {
+		try {
+
+			return "/" + String.join("/",
+					damVariation.getVariationSet().getName(),
+					damVariation.getName(),
+					size.toString(),
+					outputFormat.getFormatName(),
+					node.getSession().getWorkspace().getName()
+					) +
+					node.getPath();
+
+		} catch (RepositoryException e) {
+			throw new RuntimeException("Cannot generate cache path", e);
+		}
+	}
 }

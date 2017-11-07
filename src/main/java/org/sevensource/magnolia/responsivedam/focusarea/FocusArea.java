@@ -7,7 +7,7 @@ public class FocusArea {
 	private Integer height;
 
 	public FocusArea() {}
-	
+
 	public FocusArea(Integer x, Integer y, Integer width, Integer height) {
 		this.x = x;
 		this.y = y;
@@ -18,7 +18,7 @@ public class FocusArea {
 	public static FocusArea of(FocusArea focusArea)  {
 		return new FocusArea(focusArea.getX(), focusArea.getY(), focusArea.getWidth(), focusArea.getHeight());
 	}
-	
+
 	public boolean isValid() {
 		if(x == null || y == null || width == null || height == null) {
 			return false;
@@ -28,7 +28,7 @@ public class FocusArea {
 			return true;
 		}
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -72,11 +72,11 @@ public class FocusArea {
 		return true;
 	}
 
-	
+
 	public Integer getX() {
 		return x;
 	}
-	
+
 	public void setX(Integer x) {
 		this.x = x;
 	}

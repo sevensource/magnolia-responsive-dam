@@ -10,10 +10,9 @@ import info.magnolia.imaging.operations.load.AbstractFromNode;
 
 public class FromAspectAwareBinaryNode extends AbstractFromNode<AspectAwareParameter> {
 
-    @Override
-    protected Binary getBinaryFromNode(ParameterProvider<AspectAwareParameter> param) throws RepositoryException {
-        final AspectAwareParameter aspectAwareParameter = param.getParameter();
-
-        return aspectAwareParameter.getBinary();
-    }
+	@Override
+	protected Binary getBinaryFromNode(ParameterProvider<AspectAwareParameter> param) throws RepositoryException {
+		final AspectAwareParameter aspectAwareParameter = param.getParameter();
+		return aspectAwareParameter.getBinary();
+	}
 }

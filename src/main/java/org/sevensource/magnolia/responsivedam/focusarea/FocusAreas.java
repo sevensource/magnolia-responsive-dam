@@ -5,22 +5,22 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 public class FocusAreas {
-	
+
 	private Map<String, FocusArea> areas = new HashMap<>();
-	
-	
+
+
 	public Map<String, FocusArea> getAreas() {
 		return areas;
 	}
-	
+
 	public void setAreas(Map<String, FocusArea> areas) {
 		this.areas = areas;
 	}
-	
+
 	public void addArea(String key, FocusArea area) {
 		areas.put(key, area);
 	}
-	
+
 	public static FocusAreas of(FocusAreas focusAreas) {
 		FocusAreas cloned = new FocusAreas();
 		for(Entry<String, FocusArea> entry : focusAreas.getAreas().entrySet()) {
