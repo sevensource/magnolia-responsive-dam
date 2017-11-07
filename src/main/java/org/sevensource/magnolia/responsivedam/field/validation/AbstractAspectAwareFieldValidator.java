@@ -1,8 +1,8 @@
 package org.sevensource.magnolia.responsivedam.field.validation;
 
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.List;
 
 import org.sevensource.magnolia.responsivedam.configuration.DamVariation;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
@@ -12,44 +12,36 @@ import com.vaadin.data.validator.AbstractValidator;
 
 public abstract class AbstractAspectAwareFieldValidator<T> extends AbstractValidator<T>{
 
-	private transient DamVariationSet damVariationSet;
-	
+	private transient List<DamVariationSet> damVariationSets;
+
 	public AbstractAspectAwareFieldValidator(String errorMessage) {
 		super(errorMessage);
 	}
-	
-	protected void setDamVariationSet(DamVariationSet damVariationSet) {
-		this.damVariationSet = damVariationSet;
+
+	protected void setDamVariationSets(List<DamVariationSet> damVariationSets) {
+		this.damVariationSets = damVariationSets;
 	}
-	
+
 	protected boolean isValidFocusAreas(FocusAreas focusAreas) {
-		if(damVariationSet == null) {
-			return true;
+		return getMissingVariations(damVariationSets, focusAreas).isEmpty();
+	}
+
+	public static List<DamVariation> getMissingVariations(List<DamVariationSet> damVariationSets, FocusAreas focusAreas) {
+		if(damVariationSets == null || damVariationSets.isEmpty()) {
+			return Collections.emptyList();
 		}
-		
-		final Set<String> requiredAspects = damVariationSet
-			.getVariations()
-			.stream()
-			.map(DamVariation::getName)
-			.collect(Collectors.toSet());
-		
-		if(requiredAspects.isEmpty()) {
-			return true;
-		}
-			
-		final Set<String> specifiedAspects;
-		if(focusAreas != null && focusAreas.getAreas() != null) {
-			specifiedAspects = focusAreas.getAreas().keySet();
-		} else {
-			specifiedAspects = Collections.emptySet();
-		}
-		
-		for(String requiredAspect : requiredAspects) {
-			if(!specifiedAspects.contains(requiredAspect)) {
-				return false;
+
+		final List<DamVariation> missing = new ArrayList<>();
+
+		for(DamVariationSet damVariationSet : damVariationSets) {
+
+			for(DamVariation damVariation : damVariationSet.getVariations()) {
+				if(focusAreas == null || focusAreas.getFocusArea(damVariation) == null) {
+					missing.add(damVariation);
+				}
 			}
 		}
-		
-		return true;
+
+		return missing;
 	}
 }

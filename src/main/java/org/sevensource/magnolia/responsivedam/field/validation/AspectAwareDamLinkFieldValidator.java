@@ -1,5 +1,8 @@
 package org.sevensource.magnolia.responsivedam.field.validation;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -20,32 +23,37 @@ import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.ui.form.field.converter.IdentifierToPathConverter;
 
 public class AspectAwareDamLinkFieldValidator extends AbstractAspectAwareFieldValidator<String> {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareDamLinkFieldValidator.class);
-	
+
 	private final IdentifierToPathConverter identifierToPathConverter;
 	private final transient Node2BeanProcessor node2BeanProcessor;
 	private String workspace;
-	
+
 	public AspectAwareDamLinkFieldValidator(ResponsiveDamConfiguration responsiveDamConfiguration, AspectAwareDamLinkFieldDefinition fieldDefinition, Node2BeanProcessor node2BeanProcessor, String errorMessage) {
 		super(errorMessage);
-		final DamVariationSet damVariationSet = responsiveDamConfiguration.getVariationSet(fieldDefinition.getVariationSet());
-		setDamVariationSet(damVariationSet);
-		
+
+		final List<DamVariationSet> damVariationSets = fieldDefinition.getVariationSets()
+			.stream()
+			.map(name -> responsiveDamConfiguration.getVariationSet(name))
+			.collect(Collectors.toList());
+
+		setDamVariationSets(damVariationSets);
+
 		this.identifierToPathConverter = fieldDefinition.getIdentifierToPathConverter();
 		this.node2BeanProcessor = node2BeanProcessor;
 	}
-	
-	
+
+
 	public boolean isImage(String value) {
 		if(value == null) {
 			return true;
 		}
-		
+
 		final Node node = getNodeFromIdentifier(value);
 		return isImage(node);
 	}
-	
+
 	private boolean isImage(Node node) {
 		final String mimeType = PropertyUtil.getString(AssetNodeTypes.AssetResource.getResourceNodeFromAsset(node), AssetNodeTypes.AssetResource.MIMETYPE, "");
 		return StringUtils.startsWith(mimeType, "image/");
@@ -56,22 +64,22 @@ public class AspectAwareDamLinkFieldValidator extends AbstractAspectAwareFieldVa
 		if(value == null) {
 			return true;
 		}
-		
+
 		final Node node = getNodeFromIdentifier(value);
-		
+
 		if(! isImage(node)) {
 			return true;
 		}
-		
+
 		final FocusAreas focusAreas = FocusAreasUtil.readFocusAreas(node, node2BeanProcessor);
 		return isValidFocusAreas(focusAreas);
 	}
-	
+
 	private Node getNodeFromIdentifier(String value) {
 		final String fieldValue = identifierToPathConverter.convertToPresentation(value, String.class, null);
 		return getNodeFromPath(fieldValue);
 	}
-	
+
 	private Node getNodeFromPath(String linkPath) {
 		if(! StringUtils.isEmpty(linkPath)) {
 			try {
@@ -82,18 +90,18 @@ public class AspectAwareDamLinkFieldValidator extends AbstractAspectAwareFieldVa
 				logger.error("Could not get item from path:", e);
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	public void setWorkspace(String workspace) {
 		this.workspace = workspace;
 	}
-	
+
 	public String getWorkspace() {
 		return workspace;
 	}
-	
+
 
 	@Override
 	public Class<String> getType() {

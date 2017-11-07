@@ -1,18 +1,18 @@
 package org.sevensource.magnolia.responsivedam.field.upload;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.inject.Inject;
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.jackrabbit.JcrConstants;
 import org.sevensource.magnolia.responsivedam.focusarea.FocusArea;
+import org.sevensource.magnolia.responsivedam.focusarea.FocusAreaSet;
 import org.sevensource.magnolia.responsivedam.focusarea.FocusAreas;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class AspectAwareAssetTransformer extends AssetTransformer<AspectAwareAss
 
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareAssetTransformer.class);
 
-	public static final String PROP_ASPECTS = "focusAreas";
+	public  static final String PROP_FOCUSAREAS = "focusAreas";
 	private static final String PROP_X = "x";
 	private static final String PROP_Y = "y";
 	private static final String PROP_WIDTH = "width";
@@ -51,52 +51,83 @@ public class AspectAwareAssetTransformer extends AssetTransformer<AspectAwareAss
 		return Components.newInstance(AspectAwareAssetUploadReceiver.class);
 	}
 
+	private void removeStaleItems(AspectAwareAssetUploadReceiver newValue) {
+
+		final Item rootItem = getRootItem();
+		final Item focusAreasItem = getOrCreateFocusAreasItem((AbstractJcrNodeAdapter) rootItem);
+
+		if(newValue == null || newValue.getFocusAreas() == null) {
+			((JcrNodeAdapter) rootItem).removeChild((AbstractJcrNodeAdapter) focusAreasItem);
+		} else {
+			final FocusAreas focusAreas = newValue.getFocusAreas();
+
+			final List<AbstractJcrNodeAdapter> focusAreaSetsToBeRemoved = new ArrayList<>();
+
+			for (Entry<String, AbstractJcrNodeAdapter> focusAreaSetEntry : ((JcrNodeAdapter) focusAreasItem).getChildren().entrySet()) {
+				final String focusAreaSetName = focusAreaSetEntry.getKey();
+
+				if(focusAreas.getFocusAreaSet(focusAreaSetName) == null) {
+					focusAreaSetsToBeRemoved.add(focusAreaSetEntry.getValue());
+				} else {
+					final Item focusAreaSetItem = getOrCreateItem((AbstractJcrNodeAdapter) focusAreasItem, focusAreaSetName);
+
+					final List<AbstractJcrNodeAdapter> focusAreasToBeRemoved = new ArrayList<>();
+
+					for (Entry<String, AbstractJcrNodeAdapter> focusAreaEntry : ((JcrNodeAdapter) focusAreaSetItem).getChildren().entrySet()) {
+						final String focusAreaName = focusAreaEntry.getKey();
+
+						if(focusAreas.getFocusAreaSet(focusAreaSetName).getFocusArea(focusAreaName) == null) {
+							focusAreasToBeRemoved.add(focusAreaEntry.getValue());
+						}
+					}
+
+					for (AbstractJcrNodeAdapter r : focusAreasToBeRemoved) {
+						((JcrNodeAdapter) focusAreaSetItem).removeChild(r);
+					}
+				}
+			}
+
+			for (AbstractJcrNodeAdapter r : focusAreaSetsToBeRemoved) {
+				((JcrNodeAdapter) focusAreasItem).removeChild(r);
+			}
+		}
+	}
+
 	@Override
 	public Item populateItem(AspectAwareAssetUploadReceiver newValue, Item item) {
 
 		super.populateItem(newValue, item);
-
 		final Item rootItem = getRootItem();
 
 		final Item focusAreasItem = getOrCreateFocusAreasItem((AbstractJcrNodeAdapter) rootItem);
 		((AbstractJcrNodeAdapter) rootItem).addChild((AbstractJcrNodeAdapter) focusAreasItem);
 
-		final Set<String> focusAreaKeys;
+		removeStaleItems(newValue);
 
-		if (newValue != null && newValue.getFocusAreas() != null && newValue.getFocusAreas().getAreas() != null) {
-			focusAreaKeys = newValue.getFocusAreas().getAreas().keySet();
 
-			for (Entry<String, FocusArea> entry : newValue.getFocusAreas().getAreas().entrySet()) {
-				final Item focusAreaItem = getOrCreateItem((AbstractJcrNodeAdapter) focusAreasItem, entry.getKey());
+		if (newValue != null &&
+				newValue.getFocusAreas() != null &&
+				! CollectionUtils.isEmpty(newValue.getFocusAreas().getFocusAreaSets()) &&
+				! CollectionUtils.isEmpty(newValue.getFocusAreas().getFocusAreaSets().get(0).getFocusAreas())) {
 
-				final FocusArea area = entry.getValue();
 
-				getOrCreateProperty(focusAreaItem, PROP_X, Long.class).setValue((long) area.getX());
-				getOrCreateProperty(focusAreaItem, PROP_Y, Long.class).setValue((long) area.getY());
-				getOrCreateProperty(focusAreaItem, PROP_WIDTH, Long.class).setValue((long) area.getWidth());
-				getOrCreateProperty(focusAreaItem, PROP_HEIGHT, Long.class).setValue((long) area.getHeight());
+			final FocusAreas focusAreas = newValue.getFocusAreas();
 
-				((JcrNodeAdapter) focusAreasItem).addChild((JcrNodeAdapter) focusAreaItem);
-			}
-		} else {
-			focusAreaKeys = Collections.emptySet();
-		}
 
-		if (focusAreaKeys.isEmpty()) {
-			((JcrNodeAdapter) rootItem).removeChild((AbstractJcrNodeAdapter) focusAreasItem);
-		} else {
-			// remove stale entries
-			List<AbstractJcrNodeAdapter> childrenToBeRemoved = new ArrayList<>();
+			for(FocusAreaSet focusAreaSet : focusAreas.getFocusAreaSets()) {
+				final Item focusAreaSetItem = getOrCreateItem((AbstractJcrNodeAdapter) focusAreasItem, focusAreaSet.getName());
+				((JcrNodeAdapter) focusAreasItem).addChild((JcrNodeAdapter) focusAreaSetItem);
 
-			for (Entry<String, AbstractJcrNodeAdapter> entry : ((JcrNodeAdapter) focusAreasItem).getChildren()
-					.entrySet()) {
-				if (!focusAreaKeys.contains(entry.getKey())) {
-					childrenToBeRemoved.add((JcrNodeAdapter) entry.getValue());
+				for (FocusArea focusArea : focusAreaSet.getFocusAreas()) {
+					final Item focusAreaItem = getOrCreateItem((AbstractJcrNodeAdapter) focusAreaSetItem, focusArea.getName());
+
+					getOrCreateProperty(focusAreaItem, PROP_X, Long.class).setValue((long) focusArea.getX());
+					getOrCreateProperty(focusAreaItem, PROP_Y, Long.class).setValue((long) focusArea.getY());
+					getOrCreateProperty(focusAreaItem, PROP_WIDTH, Long.class).setValue((long) focusArea.getWidth());
+					getOrCreateProperty(focusAreaItem, PROP_HEIGHT, Long.class).setValue((long) focusArea.getHeight());
+
+					((JcrNodeAdapter) focusAreaSetItem).addChild((JcrNodeAdapter) focusAreaItem);
 				}
-			}
-
-			for (AbstractJcrNodeAdapter r : childrenToBeRemoved) {
-				((JcrNodeAdapter) focusAreasItem).removeChild(r);
 			}
 		}
 
@@ -114,21 +145,32 @@ public class AspectAwareAssetTransformer extends AssetTransformer<AspectAwareAss
 		if (!uploadReceiver.isEmpty() && uploadReceiver.isImage()) {
 			final Item rootItem = getRootItem();
 
-			FocusAreas focusAreas = new FocusAreas();
+			final FocusAreas focusAreas = new FocusAreas();
 
-			Item aspectsItem = getOrCreateFocusAreasItem((AbstractJcrNodeAdapter) rootItem);
+			final Item focusAreasItem = getOrCreateFocusAreasItem((AbstractJcrNodeAdapter) rootItem);
 
-			Map<String, AbstractJcrNodeAdapter> aspectsChildren = ((AbstractJcrNodeAdapter) aspectsItem).getChildren();
+			final Map<String, AbstractJcrNodeAdapter> focusAreaSets = ((AbstractJcrNodeAdapter) focusAreasItem).getChildren();
 
-			for (Entry<String, AbstractJcrNodeAdapter> childEntry : aspectsChildren.entrySet()) {
-				final String name = childEntry.getKey();
-				final Item childItem = getOrCreateItem((JcrNodeAdapter) aspectsItem, name);
+			for (Entry<String, AbstractJcrNodeAdapter> focusAreaSetEntry : focusAreaSets.entrySet()) {
+				final String focusAreaSetName = focusAreaSetEntry.getKey();
+				final Item focusAreaSetItem = getOrCreateItem((JcrNodeAdapter) focusAreasItem, focusAreaSetName);
 
-				FocusArea focusArea = getOrCreateFocusAreaFromItem(childItem);
-				if (focusArea == null) {
-					logger.error("Invalid FocusArea for {}", name);
-				} else {
-					focusAreas.addArea(name, focusArea);
+				final Map<String, AbstractJcrNodeAdapter> focusAreaSetChildren = ((AbstractJcrNodeAdapter) focusAreaSetItem).getChildren();
+
+				final FocusAreaSet focusAreaSet = new FocusAreaSet();
+				focusAreaSet.setName(focusAreaSetName);
+				focusAreas.addFocusAreaSet(focusAreaSet);
+
+				for (Entry<String, AbstractJcrNodeAdapter> childEntry : focusAreaSetChildren.entrySet()) {
+					final String focusAreaName = childEntry.getKey();
+					final Item focusAreaItem = getOrCreateItem((JcrNodeAdapter) focusAreaSetItem, focusAreaName);
+
+					final FocusArea focusArea = getOrCreateFocusAreaFromItem(focusAreaName, focusAreaItem);
+					if (focusArea == null) {
+						logger.error("Invalid FocusArea for {}/{}", focusAreaSetName, focusAreaName);
+					} else {
+						focusAreaSet.addFocusArea(focusArea);
+					}
 				}
 			}
 
@@ -157,7 +199,7 @@ public class AspectAwareAssetTransformer extends AssetTransformer<AspectAwareAss
 	}
 
 	private Item getOrCreateFocusAreasItem(AbstractJcrNodeAdapter item) {
-		return getOrCreateItem(item, PROP_ASPECTS);
+		return getOrCreateItem(item, PROP_FOCUSAREAS);
 	}
 
 	private Item getOrCreateItem(AbstractJcrNodeAdapter item, String itemName) {
@@ -189,7 +231,7 @@ public class AspectAwareAssetTransformer extends AssetTransformer<AspectAwareAss
 		return value != null ? value.intValue() : null;
 	}
 
-	private FocusArea getOrCreateFocusAreaFromItem(Item item) {
+	private FocusArea getOrCreateFocusAreaFromItem(String focusAreaName, Item item) {
 		Property<Long> pX = getOrCreateProperty(item, PROP_X, Long.class);
 		Property<Long> pY = getOrCreateProperty(item, PROP_Y, Long.class);
 		Property<Long> pW = getOrCreateProperty(item, PROP_WIDTH, Long.class);
@@ -200,8 +242,7 @@ public class AspectAwareAssetTransformer extends AssetTransformer<AspectAwareAss
 		final Integer w = longToInteger(pW.getValue());
 		final Integer h = longToInteger(pH.getValue());
 
-		FocusArea focusArea = new FocusArea(x, y, w, h);
-
+		final FocusArea focusArea = new FocusArea(focusAreaName, x, y, w, h);
 		return focusArea.isValid() ? focusArea : null;
 	}
 }

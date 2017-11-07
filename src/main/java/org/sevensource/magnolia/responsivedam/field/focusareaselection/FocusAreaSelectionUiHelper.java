@@ -32,29 +32,35 @@ import info.magnolia.ui.mediaeditor.action.feature.ScaleToActualSizeAction;
 import info.magnolia.ui.mediaeditor.action.feature.ScaleToFitAction;
 
 public class FocusAreaSelectionUiHelper {
-	
+
 	private static final String SCALE_TO_ACTUAL = "scaleToActual";
 	static final String SCALE_TO_FIT = "scaleToFit";
 	private static final String SELECT_PREFIX = "select_";
-	
+
 	private FocusAreaSelectionUiHelper() {}
-	
-	
-	static Map<String, ActionDefinition> buildActionbarActions(DamVariationSet damVariationSet) {
+
+
+	static Map<String, ActionDefinition> buildActionbarActions(List<DamVariationSet> damVariationSets) {
 		Map<String, ActionDefinition> actions = new HashMap<>();
-		
+
 		actions.put(SCALE_TO_ACTUAL, buildActionDefinition("Zoom to actual size", "icon-view-in-actual-size", ScaleToActualSizeAction.class, new ScaleToActualSizeActionDefinition()));
 		actions.put(SCALE_TO_FIT, buildActionDefinition("Zoom to fit", "icon-zoom-to-fit", ScaleToFitAction.class, new ScaleToFitActionDefinition()));
-		
-		for(DamVariation variation : damVariationSet.getVariations()) {
-			final SelectionActionDefinition sad = new SelectionActionDefinition(variation);
-			actions.put(SELECT_PREFIX + variation.getName(), 
-					buildActionDefinition(variation.getName(), "icon-view", SelectionAction.class, sad));
+
+		for(DamVariationSet damVariationSet : damVariationSets) {
+			for(DamVariation variation : damVariationSet.getVariations()) {
+				final SelectionActionDefinition sad = new SelectionActionDefinition(variation);
+				final String actionId = buildActionId(variation);
+				final String actionLabel = buildDamVariationLabel(variation, false);
+				actions.put(actionId,
+						buildActionDefinition(actionLabel, "icon-view", SelectionAction.class, sad));
+			}
 		}
-		
+
+
+
 		return actions;
 	}
-	
+
 	private static ActionDefinition buildActionDefinition(String name, String icon, Class<? extends Action> implementationClass, ConfiguredActionDefinition definition) {
 		definition.setName(name);
 		definition.setLabel(name);
@@ -62,44 +68,70 @@ public class FocusAreaSelectionUiHelper {
 		definition.setImplementationClass(implementationClass);
 		return definition;
 	}
-	
-	
+
+
 	///////////////
-	
-	static ActionbarDefinition buildActionbarDefinition(DamVariationSet damVariationSet) {
-		ConfiguredActionbarDefinition definition = new ConfiguredActionbarDefinition();
-		ConfiguredActionbarSectionDefinition section = new ConfiguredActionbarSectionDefinition();
+
+	static ActionbarDefinition buildActionbarDefinition(List<DamVariationSet> damVariationSets) {
+		final ConfiguredActionbarDefinition definition = new ConfiguredActionbarDefinition();
+		final ConfiguredActionbarSectionDefinition section = new ConfiguredActionbarSectionDefinition();
 		section.setName("imageAreaSelect");
 		section.setLabel("Area of interests");
 		definition.addSection(section);
-		ConfiguredActionbarGroupDefinition aspectsGroup = new ConfiguredActionbarGroupDefinition();
-		aspectsGroup.setName("aspects");
-		ConfiguredActionbarGroupDefinition utilityGroup = new ConfiguredActionbarGroupDefinition();
+
+		for(DamVariationSet damVariationSet : damVariationSets) {
+			final ConfiguredActionbarSectionDefinition variationSetSection = new ConfiguredActionbarSectionDefinition();
+			variationSetSection.setName("variationSet_" + damVariationSet.getName());
+			variationSetSection.setLabel(damVariationSet.getName());
+			definition.addSection(variationSetSection);
+
+			final ConfiguredActionbarGroupDefinition variationGroup = new ConfiguredActionbarGroupDefinition();
+			variationGroup.setName("variationGroup_" + damVariationSet.getName());
+			variationSetSection.addGroup(variationGroup);
+
+			for(DamVariation spec : damVariationSet.getVariations()) {
+				final String actionId = buildActionId(spec);
+				variationGroup.addItem(buildActionbarItemDefinition(actionId));
+			}
+		}
+
+
+		final ConfiguredActionbarSectionDefinition utilitySection = new ConfiguredActionbarSectionDefinition();
+		utilitySection.setName("Zoom");
+		definition.addSection(utilitySection);
+		final ConfiguredActionbarGroupDefinition utilityGroup = new ConfiguredActionbarGroupDefinition();
 		utilityGroup.setName("utility");
-		section.addGroup(aspectsGroup);
-		section.addGroup(utilityGroup);
+		utilitySection.addGroup(utilityGroup);
 
 		utilityGroup.addItem(buildActionbarItemDefinition(SCALE_TO_FIT));
 		utilityGroup.addItem(buildActionbarItemDefinition(SCALE_TO_ACTUAL));
-		
-		for(DamVariation spec : damVariationSet.getVariations()) {
-			aspectsGroup.addItem(buildActionbarItemDefinition(SELECT_PREFIX + spec.getName()));
-		}
-		
+
 		return definition;
 	}
-	
+
+	private static String buildActionId(DamVariation variation) {
+		return String.format("%s%s_%s", SELECT_PREFIX, variation.getVariationSet().getName(), variation.getName());
+	}
+
+	static String buildDamVariationLabel(DamVariation variation, boolean includeVariationSetName) {
+		if(includeVariationSetName) {
+			return String.format("%s/%s", variation.getVariationSet().getName(), variation.getName());
+		} else {
+			return variation.getName();
+		}
+	}
+
 	private static ActionbarItemDefinition buildActionbarItemDefinition(String name) {
 		ConfiguredActionbarItemDefinition item = new ConfiguredActionbarItemDefinition();
 		item.setName(name);
 		return item;
 	}
-	
+
 	////
-	
+
 	static Component renderEditorAction(MediaEditorView view, List<ActionContext> actionContexts) {
 		Component defaultAction = null;
-		
+
 		Iterator<ActionContext> it = actionContexts.iterator();
 		boolean defaultIsSet = false;
 		while (it.hasNext()) {
@@ -114,9 +146,9 @@ public class FocusAreaSelectionUiHelper {
 				defaultIsSet = true;
 			}
 		}
-		
+
 		return defaultAction;
 	}
-	
+
 
 }

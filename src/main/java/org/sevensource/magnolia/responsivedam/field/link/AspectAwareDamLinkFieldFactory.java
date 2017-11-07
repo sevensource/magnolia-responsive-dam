@@ -1,5 +1,8 @@
 package org.sevensource.magnolia.responsivedam.field.link;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
@@ -25,52 +28,56 @@ import info.magnolia.ui.form.field.factory.LinkFieldFactory;
 public class AspectAwareDamLinkFieldFactory extends LinkFieldFactory<AspectAwareDamLinkFieldDefinition>{
 
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareDamLinkFieldFactory.class);
-	
+
 	private final FormDialogPresenterFactory formDialogPresenterFactory;
 	private final UiContext uiContext;
 	private final DialogDefinitionRegistry dialogDefinitionRegistry;
 	private final Node2BeanProcessor node2BeanProcessor;
 	private final SimpleTranslator i18n;
-	
+
 	private final ResponsiveDamConfiguration responsiveDamConfiguration;
 	private final AspectAwareDamLinkFieldDefinition fieldDefinition;
-	
+
 	@Inject
     public AspectAwareDamLinkFieldFactory(ResponsiveDamConfiguration responsiveDamConfiguration, AspectAwareDamLinkFieldDefinition definition, Item relatedFieldItem, UiContext uiContext, I18NAuthoringSupport i18nAuthoringSupport, AppController appController, ComponentProvider componentProvider,
     		FormDialogPresenterFactory formDialogPresenterFactory, final DialogDefinitionRegistry dialogDefinitionRegistry, SimpleTranslator i18n, Node2BeanProcessor node2BeanProcessor) {
-		
+
     	super(definition, relatedFieldItem, uiContext, i18nAuthoringSupport, appController, componentProvider);
-    	
+
     	this.responsiveDamConfiguration = responsiveDamConfiguration;
     	this.fieldDefinition = definition;
-    	
+
 		this.formDialogPresenterFactory = formDialogPresenterFactory;
 		this.uiContext = uiContext;
 		this.dialogDefinitionRegistry = dialogDefinitionRegistry;
 		this.node2BeanProcessor = node2BeanProcessor;
 		this.i18n = i18n;
     }
-    
-	
+
+
     @Override
     protected Field<String> createFieldComponent() {
     	final LinkField linkField = (LinkField) super.createFieldComponent();
-    	
-    	final DamVariationSet variationSet = responsiveDamConfiguration.getVariationSet(definition.getVariationSet());
-    	
+
+    	final List<DamVariationSet> variationSets = new ArrayList<>();
+    	for(String variationSetName : definition.getVariationSets()) {
+    		final DamVariationSet variationSet = responsiveDamConfiguration.getVariationSet(variationSetName);
+    		variationSets.add(variationSet);
+    	}
+
     	final AspectAwareDamLinkField field = new AspectAwareDamLinkField
     			(linkField, formDialogPresenterFactory, dialogDefinitionRegistry, uiContext, i18n);
-    	
+
     	field.setWorkspace(fieldDefinition.getTargetWorkspace());
     	field.setAspectsAppName(fieldDefinition.getAspectsAppName());
-    	field.setVariationSet(variationSet);
-    	
+    	field.setVariationSets(variationSets);
+
     	final String errorMessage = i18n.translate(AspectAwareDamLinkField.aspectsIncompleteErrorTxt);
     	AspectAwareDamLinkFieldValidator validator = new AspectAwareDamLinkFieldValidator(responsiveDamConfiguration, definition, node2BeanProcessor, errorMessage);
     	validator.setWorkspace(fieldDefinition.getTargetWorkspace());
-    	
+
 		field.addValidator(validator);
-    	
+
     	return field;
     }
 

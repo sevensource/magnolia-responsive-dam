@@ -47,7 +47,7 @@ public class AspectAwareParameterProvider implements ParameterProvider<AspectAwa
 		this.contentNode = ResponsiveDamNodeUtil.getContentNode(rendition.getNode());
 		this.containerNode = ResponsiveDamNodeUtil.getContainerNode(contentNode);
 
-		final FocusArea focusArea = FocusAreasUtil.readFocusArea(containerNode, rendition.getVariation(), node2BeanProcessor);
+		final FocusArea focusArea = FocusAreasUtil.readFocusArea(containerNode, rendition.getVariationSet(), rendition.getVariation(), node2BeanProcessor);
 		if(focusArea == null) {
 			final String msg = String.format("No FocusArea with name %s defined for asset [%s/%s]", rendition.getVariation(), containerNode.getSession().getWorkspace().getName(), containerNode.getPath());
 			throw new IllegalArgumentException(msg);
@@ -106,9 +106,9 @@ public class AspectAwareParameterProvider implements ParameterProvider<AspectAwa
 		}
 
 
-		final FocusArea focusArea = FocusAreasUtil.readFocusArea(containerNode, requestedVariation, node2BeanProcessor);
+		final FocusArea focusArea = FocusAreasUtil.readFocusArea(containerNode, requestedVariationSet, requestedVariation, node2BeanProcessor);
 		if(focusArea == null) {
-			final String msg = String.format("No FocusArea with name %s defined for asset [%s/%s]", requestedVariation, requestedWorkspace, requestedPath);
+			final String msg = String.format("No FocusArea with name %s/%s defined for asset [%s/%s]", requestedVariationSet, requestedVariation, requestedWorkspace, requestedPath);
 			throw new IllegalArgumentException(msg);
 		}
 
