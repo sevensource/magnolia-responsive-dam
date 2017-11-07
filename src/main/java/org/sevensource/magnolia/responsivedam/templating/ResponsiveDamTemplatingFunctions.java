@@ -55,15 +55,10 @@ public class ResponsiveDamTemplatingFunctions {
 	}
 
 	public String getDataUriEncodedRendition(ResponsiveDamRendition rendition) throws IOException, ImagingException {
-		try {
-			return "data:" +
-					getMimeTypeByOutputFormat(rendition.getOutputFormat()) +
-					";base64," +
-					getBase64EncodedRendition(rendition);
-		} catch(IllegalArgumentException iae) {
-			logger.error("Error while encoding ResposiveDamRendition: ", iae.getMessage());
-			return null;
-		}
+		return "data:" +
+				getMimeTypeByOutputFormat(rendition.getOutputFormat()) +
+				";base64," +
+				getBase64EncodedRendition(rendition);
 	}
 
 	public String generateSrcSet(List<ResponsiveDamRendition> renditions) {

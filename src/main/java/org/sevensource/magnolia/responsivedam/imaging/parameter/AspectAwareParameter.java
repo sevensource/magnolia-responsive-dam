@@ -49,6 +49,10 @@ public class AspectAwareParameter {
 		return size;
 	}
 
+	public DamVariation getDamVariation() {
+		return damVariation;
+	}
+
 	public String getCachePath() {
 		try {
 

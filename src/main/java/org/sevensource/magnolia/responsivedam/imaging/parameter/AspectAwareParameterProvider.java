@@ -109,9 +109,8 @@ public class AspectAwareParameterProvider implements ParameterProvider<AspectAwa
 		final FocusArea focusArea = FocusAreasUtil.readFocusArea(containerNode, requestedVariationSet, requestedVariation, node2BeanProcessor);
 		if(focusArea == null) {
 			final String msg = String.format("No FocusArea with name %s/%s defined for asset [%s/%s]", requestedVariationSet, requestedVariation, requestedWorkspace, requestedPath);
-			throw new IllegalArgumentException(msg);
+			logger.error(msg);
 		}
-
 
 		parameter = new AspectAwareParameter(contentNode, variation, focusArea, requestedSizeSpecification, outputFormat);
 	}
