@@ -1,7 +1,6 @@
 package org.sevensource.magnolia.responsivedam.field.validation;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
 import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
@@ -15,13 +14,8 @@ public class AspectAwareDamUploadFieldValidator
 			AspectAwareDamUploadFieldDefinition fieldDefinition, String errorMessage) {
 		super(errorMessage);
 
-		if(fieldDefinition.getVariationSets() != null) {
-			final List<DamVariationSet> damVariationSets = fieldDefinition.getVariationSets()
-					.stream()
-					.map(name -> responsiveDamConfiguration.getVariationSet(name))
-					.collect(Collectors.toList());
-			setDamVariationSets(damVariationSets);
-		}
+		final List<DamVariationSet> damVariationSets = transformDamVariationSets(responsiveDamConfiguration, fieldDefinition.getVariationSets());
+		setDamVariationSets(damVariationSets);
 	}
 
 	@Override

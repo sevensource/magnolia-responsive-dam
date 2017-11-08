@@ -50,7 +50,7 @@ public class AspectAwareParameterProvider implements ParameterProvider<AspectAwa
 		final FocusArea focusArea = FocusAreasUtil.readFocusArea(containerNode, rendition.getVariationSet(), rendition.getVariation(), node2BeanProcessor);
 		if(focusArea == null) {
 			final String msg = String.format("No FocusArea with name %s defined for asset [%s/%s]", rendition.getVariation(), containerNode.getSession().getWorkspace().getName(), containerNode.getPath());
-			throw new IllegalArgumentException(msg);
+			logger.error(msg);
 		}
 
 		final DamVariation variation = responsiveDamConfiguration.getVariation(rendition.getVariationSet(), rendition.getVariation());

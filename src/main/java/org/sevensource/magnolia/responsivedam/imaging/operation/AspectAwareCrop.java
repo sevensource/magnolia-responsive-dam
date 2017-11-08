@@ -31,19 +31,6 @@ public class AspectAwareCrop implements ImageOperation<ParameterProvider<AspectA
 		return source.getSubimage(cropLocation.x(), cropLocation.y(), cropDimension.x(), cropDimension.y());
 	}
 
-	private class XYPair {
-		private final int x;
-		private final int y;
-
-		public XYPair(int x, int y) {
-			this.x = x;
-			this.y = y;
-		}
-
-		int x() { return x; }
-		int y() { return y; }
-	}
-
 
 	private XYPair getCropLocation(XYPair currentDimension, XYPair cropDimension) {
 

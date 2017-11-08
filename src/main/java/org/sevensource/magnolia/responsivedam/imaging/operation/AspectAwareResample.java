@@ -21,27 +21,34 @@ public class AspectAwareResample implements ImageOperation<ParameterProvider<Asp
 	public BufferedImage apply(BufferedImage source, ParameterProvider<AspectAwareParameter> params)
 			throws ImagingException {
 
-		final Size size = getTargetSize(params);
-		final ResampleOp resampler = new ResampleOp(size.getWidth(), size.getHeight(), FILTER_TYPE);
+		final SizeSpecification spec = params.getParameter().getSize();
+
+		final FocusArea focusArea = params.getParameter().getFocusArea();
+		final XYPair sourceDimensions;
+
+		if(focusArea == null) {
+			sourceDimensions = new XYPair(source.getWidth(), source.getHeight());
+		} else {
+			sourceDimensions = new XYPair(focusArea.getWidth(), focusArea.getHeight());
+		}
+
+		final Size targetSize = getTargetSize(sourceDimensions, spec);
+		final ResampleOp resampler = new ResampleOp(targetSize.getWidth(), targetSize.getHeight(), FILTER_TYPE);
 		return resampler.filter(source, null);
 	}
 
-	private Size getTargetSize(ParameterProvider<AspectAwareParameter> params) {
-
-		final FocusArea focusArea = params.getParameter().getFocusArea();
-		final SizeSpecification spec = params.getParameter().getSize();
-
+	private Size getTargetSize(XYPair sourceDimensions, SizeSpecification spec) {
 		int width = 0;
 		int height = 0;
 
 		switch(spec.getDimension()) {
 		case WIDTH:
 			width = spec.getValue();
-			height = (int) Math.round( (double) focusArea.getHeight() / ((double) focusArea.getWidth() / (double) width) );
+			height = (int) Math.round( (double) sourceDimensions.y() / ((double) sourceDimensions.x() / (double) width) );
 			break;
 		case HEIGHT:
 			height = spec.getValue();
-			width = (int) Math.round( (double) focusArea.getWidth() / ((double) focusArea.getHeight() / (double) height) );
+			width = (int) Math.round( (double) sourceDimensions.x() / ((double) sourceDimensions.y() / (double) height) );
 			break;
 		default:
 			throw new IllegalArgumentException("Unknown dimension");

@@ -1,7 +1,6 @@
 package org.sevensource.magnolia.responsivedam.field.validation;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
@@ -33,11 +32,7 @@ public class AspectAwareDamLinkFieldValidator extends AbstractAspectAwareFieldVa
 	public AspectAwareDamLinkFieldValidator(ResponsiveDamConfiguration responsiveDamConfiguration, AspectAwareDamLinkFieldDefinition fieldDefinition, Node2BeanProcessor node2BeanProcessor, String errorMessage) {
 		super(errorMessage);
 
-		final List<DamVariationSet> damVariationSets = fieldDefinition.getVariationSets()
-			.stream()
-			.map(name -> responsiveDamConfiguration.getVariationSet(name))
-			.collect(Collectors.toList());
-
+		final List<DamVariationSet> damVariationSets = transformDamVariationSets(responsiveDamConfiguration, fieldDefinition.getVariationSets());
 		setDamVariationSets(damVariationSets);
 
 		this.identifierToPathConverter = fieldDefinition.getIdentifierToPathConverter();
