@@ -23,6 +23,8 @@ public class ResponsiveDamRendition {
 
 	private static final Logger logger = LoggerFactory.getLogger(ResponsiveDamRendition.class);
 
+	private static final String DEFAULT_FILENAME = "image";
+
 
 	private final Node node;
 	private final String variationSet;
@@ -63,28 +65,28 @@ public class ResponsiveDamRendition {
 
 		try {
 			final String workspaceName = node.getSession().getWorkspace().getName();
-			final String path = node.getPath();
+			final String nodeName = node.getName();
 
-			if(path.endsWith(JcrConstants.JCR_CONTENT)) {
-				final Node parent = node.getParent();
-				fileName = PropertyUtil.getString(parent, AssetNodeTypes.AssetResource.FILENAME);
-				fileName = FilenameUtils.removeExtension(fileName);
+			//remove jcr:content from link
+			final String path = (nodeName.equals(JcrConstants.JCR_CONTENT)) ? node.getParent().getPath() : node.getPath();
+
+			if(nodeName.equals(JcrConstants.JCR_CONTENT)) {
+				fileName = PropertyUtil.getString(node.getParent(), AssetNodeTypes.AssetResource.FILENAME);
 			}
-
 
 			if(StringUtils.isEmpty(fileName)) {
 				fileName = PropertyUtil.getString(node, FileProperties.PROPERTY_FILENAME);
-				fileName = FilenameUtils.removeExtension(fileName);
+			}
 
-				if(StringUtils.isEmpty(fileName)) {
-					fileName = "image";
-				}
+			if(StringUtils.isEmpty(fileName)) {
+				fileName = DEFAULT_FILENAME;
 			}
 
 
+			fileName = FilenameUtils.removeExtension(fileName);
 			fileName += "." + outputFormat.getFormatName();
-
 			fileName = new URI(null, null, fileName, null).toASCIIString();
+
 
 			return String.join("/",
 					MgnlContext.getContextPath(),

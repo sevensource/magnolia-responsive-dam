@@ -16,15 +16,18 @@ public class ResponsiveDamNodeUtil {
 	private ResponsiveDamNodeUtil() {}
 
 	public static Node getContentNode(String workspace, String path) throws RepositoryException {
+		final Node node;
 		if(IDENTIFIER_PATTERN.matcher(path).matches()) {
-			return MgnlContext.getJCRSession(workspace).getNodeByIdentifier(path);
+			node = MgnlContext.getJCRSession(workspace).getNodeByIdentifier(path);
 		} else {
-			return MgnlContext.getJCRSession(workspace).getNode("/" + path);
+			node = MgnlContext.getJCRSession(workspace).getNode("/" + path);
 		}
+
+		return getContentNode(node);
 	}
 
 	public static Node getContentNode(Node node) throws RepositoryException {
-		if(node.getName().endsWith(JcrConstants.JCR_CONTENT)) {
+		if(node.getName().equals(JcrConstants.JCR_CONTENT)) {
 			return node;
 		} else {
 			NodeIterator it = node.getNodes(JcrConstants.JCR_CONTENT);
@@ -37,7 +40,7 @@ public class ResponsiveDamNodeUtil {
 	}
 
 	public static Node getContainerNode(Node node) throws RepositoryException {
-		if(node.getName().endsWith(JcrConstants.JCR_CONTENT)) {
+		if(node.getName().equals(JcrConstants.JCR_CONTENT)) {
 			return node.getParent();
 		} else {
 			return node;
