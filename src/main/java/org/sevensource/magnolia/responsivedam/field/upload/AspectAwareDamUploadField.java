@@ -208,14 +208,28 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
 			val = FocusAreas.of(getValue().getFocusAreas());
 		}
 
-		final List<DamVariationSet> damVariationSet = new ArrayList<>();
+		final List<DamVariationSet> damVariationSets = new ArrayList<>();
 		if(! CollectionUtils.isEmpty(definition.getVariationSets())) {
 			for(String variationSetName : definition.getVariationSets()) {
-				damVariationSet.add(responsiveDamConfiguration.getVariationSet(variationSetName));
+				/**
+				 * filter invalid variationSets, throw exception if the definition is invalid
+				 */
+				final DamVariationSet variationSet = responsiveDamConfiguration.getVariationSet(variationSetName);
+				if(variationSet == null) {
+					throw new IllegalArgumentException("Unknown variationSet with name " + variationSetName);
+				}
+				damVariationSets.add(variationSet);
 			}
 		} else if(definition.isUseExistingFocusAreas()) {
 			for(FocusAreaSet focusAreaSet : val.getFocusAreaSets()) {
-				damVariationSet.add(responsiveDamConfiguration.getVariationSet(focusAreaSet.getName()));
+				/**
+				 * filter invalid variationSets, don't throw an exception - the variationSetName might
+				 * be an old definition still in JCR
+				 */
+				final DamVariationSet variationSet = responsiveDamConfiguration.getVariationSet(focusAreaSet.getName());
+				if(variationSet != null) {
+					damVariationSets.add(variationSet);
+				}
 			}
 		} else {
 			throw new IllegalArgumentException("Neither a variationSet is specified nor useExistingFocusAreas");
@@ -223,7 +237,7 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
 
 		try(final InputStream inputStream = new FileInputStream(getValue().getFile())) {
 			final FocusAreaSelectionPresenter presenter = new FocusAreaSelectionPresenter(actionbarPresenter, dialogPresenter, imageAreaActionExecutor, appContext, i18n);
-	        final OverlayCloser overlayCloser = uiContext.openOverlay(presenter.start(inputStream, val, damVariationSet));
+	        final OverlayCloser overlayCloser = uiContext.openOverlay(presenter.start(inputStream, val, damVariationSets));
 
 	        presenter.setCompletedListener((isCanceled,focusAreas) -> {
 
