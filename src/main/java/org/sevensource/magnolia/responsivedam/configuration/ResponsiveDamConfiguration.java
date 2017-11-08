@@ -20,6 +20,8 @@ public class ResponsiveDamConfiguration {
 	public DamVariationSet getVariationSet(String name) {
 		if(StringUtils.isEmpty(name)) {
 			return null;
+		} else if(variationSets == null) {
+			return null;
 		}
 
 		return variationSets

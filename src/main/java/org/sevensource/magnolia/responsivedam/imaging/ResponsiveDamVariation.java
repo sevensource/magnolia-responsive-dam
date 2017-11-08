@@ -15,7 +15,7 @@ import org.sevensource.magnolia.responsivedam.configuration.DamSizeConstraints;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariation;
 import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.configuration.SizeSpecification;
-import org.sevensource.magnolia.responsivedam.configuration.SizeSpecification.ResponsiveDamSizeDimension;
+import org.sevensource.magnolia.responsivedam.configuration.SizeSpecification.SizeDimension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -146,13 +146,7 @@ public class ResponsiveDamVariation {
 		}
 
 
-
-
-
-
-
-
-		final ResponsiveDamSizeDimension dimension = constraints.getMaximumSize().getDimension();
+		final SizeDimension dimension = constraints.getMaximumSize().getDimension();
 		return sizesSet
 				.stream()
 				.sorted(Comparator.reverseOrder())
