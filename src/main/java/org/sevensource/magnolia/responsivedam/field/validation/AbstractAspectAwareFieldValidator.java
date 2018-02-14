@@ -10,7 +10,9 @@ import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
 import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.focusarea.FocusAreas;
 
-import com.vaadin.data.validator.AbstractValidator;
+import com.vaadin.v7.data.validator.AbstractValidator;
+
+
 
 public abstract class AbstractAspectAwareFieldValidator<T> extends AbstractValidator<T>{
 

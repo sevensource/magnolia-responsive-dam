@@ -16,13 +16,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.annotations.StyleSheet;
-import com.vaadin.data.Property;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomField;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.ui.CustomField;
 
 import info.magnolia.config.registry.DefinitionProvider;
 import info.magnolia.config.registry.Registry.InvalidDefinitionException;

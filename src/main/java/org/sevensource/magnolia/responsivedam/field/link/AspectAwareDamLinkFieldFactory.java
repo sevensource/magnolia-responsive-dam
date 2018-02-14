@@ -11,8 +11,8 @@ import org.sevensource.magnolia.responsivedam.field.validation.AspectAwareDamLin
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.data.Item;
-import com.vaadin.ui.Field;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.Field;
 
 import info.magnolia.i18nsystem.SimpleTranslator;
 import info.magnolia.jcr.node2bean.Node2BeanProcessor;

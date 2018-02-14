@@ -7,8 +7,8 @@ import org.sevensource.magnolia.responsivedam.field.validation.AspectAwareDamUpl
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.vaadin.data.Item;
-import com.vaadin.ui.Field;
+import com.vaadin.v7.data.Item;
+import com.vaadin.v7.ui.Field;
 
 import info.magnolia.i18nsystem.I18nizer;
 import info.magnolia.i18nsystem.SimpleTranslator;
@@ -24,7 +24,7 @@ import info.magnolia.ui.mediaeditor.MediaEditorPresenterFactory;
 public class AspectAwareDamUploadFieldFactory extends AbstractFieldFactory<AspectAwareDamUploadFieldDefinition, AspectAwareAssetUploadReceiver> {
 
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareDamUploadFieldFactory.class);
-	
+
 	private final ResponsiveDamConfiguration responsiveDamConfiguration;
     private final MediaEditorPresenterFactory mediaEditorFactory;
     private final UiContext uiContext;
@@ -40,9 +40,9 @@ public class AspectAwareDamUploadFieldFactory extends AbstractFieldFactory<Aspec
 			MediaEditorPresenterFactory mediaEditorFactory, ComponentProvider componentProvider,
 			SimpleTranslator i18n, I18nizer i18nizer, ActionbarPresenter actionbarPresenter) {
     	super(definition, relatedFieldItem, uiContext, i18nAuthoringSupport);
-		
+
     	this.responsiveDamConfiguration = responsiveDamConfiguration;
-    	
+
         this.mediaEditorFactory = mediaEditorFactory;
         this.uiContext = uiContext;
         this.imageProvider = imageProvider;
@@ -60,7 +60,7 @@ public class AspectAwareDamUploadFieldFactory extends AbstractFieldFactory<Aspec
 		field.addValidator(new AspectAwareDamUploadFieldValidator(responsiveDamConfiguration, definition, errorMessage));
 		return field;
 	}
-	
+
     @Override
     protected Transformer<?> initializeTransformer(Class<? extends Transformer<?>> transformerClass) {
         return this.componentProvider.newInstance(transformerClass, item, definition, AspectAwareAssetUploadReceiver.class);

@@ -59,7 +59,7 @@ public class FocusAreaSelectionField extends ImageMediaField {
 
 			updateJcropOptions();
 		} catch (IOException e) {
-			log.error("Error reading the image data: " + e.getMessage(), e);
+			logger.error("Error reading the image data: " + e.getMessage(), e);
 		}
 	}
 
