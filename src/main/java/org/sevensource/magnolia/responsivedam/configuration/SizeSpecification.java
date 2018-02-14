@@ -4,7 +4,7 @@ import org.apache.commons.beanutils.Converter;
 
 public class SizeSpecification {
 	private final Integer value;
-	private final ResponsiveDamSizeDimension dimension;
+	private final SizeDimension dimension;
 
 	public static class SizeSpecificationConverter implements Converter {
 		@Override
@@ -14,68 +14,68 @@ public class SizeSpecification {
 			} else if(! SizeSpecification.class.isAssignableFrom(type)) {
 				throw new IllegalArgumentException("type is of type " + type.getName());
 			}
-			
+
 			return (T) SizeSpecification.of((String) value);
 		}
 	}
-	
-	
-	public enum ResponsiveDamSizeDimension {
+
+
+	public enum SizeDimension {
 		WIDTH("w"), HEIGHT("h");
-		
+
 		private final String id;
-		
-		private ResponsiveDamSizeDimension(String id) {
+
+		private SizeDimension(String id) {
 			this.id = id;
 		}
 
-		public static ResponsiveDamSizeDimension of(String spec) {
-			for(ResponsiveDamSizeDimension d : ResponsiveDamSizeDimension.values()) {
+		public static SizeDimension of(String spec) {
+			for(SizeDimension d : SizeDimension.values()) {
 				if(d.getId().equals(spec)) {
 					return d;
 				}
 			}
-			
+
 			throw new IllegalArgumentException("Unknown size spec " + spec);
 		}
-		
+
 		public String getId() {
 			return id;
 		}
 	}
-	
 
-	public SizeSpecification(Integer value, ResponsiveDamSizeDimension dimension) {
-		
+
+	public SizeSpecification(Integer value, SizeDimension dimension) {
+
 		if(value == null || value < 1) {
 			throw new IllegalArgumentException("Illegal value");
 		}
-		
+
 		if(dimension == null) {
-			throw new IllegalArgumentException("Illegal dimension");
+			throw new IllegalArgumentException("SizeDimension (h or w) must not be null");
 		}
-		
+
 		this.value = value;
 		this.dimension = dimension;
 	}
 
 	public static SizeSpecification of(String spec) {
 		final String dimensionSpec = spec.substring(spec.length() - 1, spec.length());
-		ResponsiveDamSizeDimension pDimension = ResponsiveDamSizeDimension.of(dimensionSpec);
+		SizeDimension pDimension = SizeDimension.of(dimensionSpec);
 
 		final Integer pValue = Integer.valueOf(spec.substring(0, spec.length() - 1));
 
 		return new SizeSpecification(pValue, pDimension);
 	}
 
-	public ResponsiveDamSizeDimension getDimension() {
+	public SizeDimension getDimension() {
 		return dimension;
 	}
 
 	public Integer getValue() {
 		return value;
 	}
-	
+
 	@Override
 	public String toString() {
 		return value + dimension.getId();

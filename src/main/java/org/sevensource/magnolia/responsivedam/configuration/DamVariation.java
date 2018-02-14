@@ -4,9 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DamVariation {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(DamVariation.class);
-	
+
 	private String name;
 	private DamVariationSet variationSet;
 	private String aspect;
@@ -14,7 +14,6 @@ public class DamVariation {
 	private final DamSizeConstraints constraints = new DamSizeConstraints();
 
 
-	
 	public String getName() {
 		return name;
 	}
@@ -43,11 +42,11 @@ public class DamVariation {
 	public DamSizeConstraints getConstraints() {
 		return constraints;
 	}
-	
+
 	public void setVariationSet(DamVariationSet variationSet) {
 		this.variationSet = variationSet;
 	}
-	
+
 	public DamVariationSet getVariationSet() {
 		return variationSet;
 	}
@@ -67,7 +66,7 @@ public class DamVariation {
 		} else {
 			parsedValue = Double.parseDouble(value);
 		}
-		
+
 		return parsedValue;
 	}
 }

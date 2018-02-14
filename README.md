@@ -60,7 +60,7 @@ Configuration
     - name: heroimage
       label: ImageUpload
       binaryNodeName: heroimage
-      variationSet: hero-area
+      variationSets: [hero-area]
       class: org.sevensource.magnolia.responsivedam.field.upload.AspectAwareDamUploadFieldDefinition
       editFileName: true
     ```
@@ -68,7 +68,7 @@ Configuration
     ```
     - name: heroimagelink
       label: ImageLink
-      variationSet: hero-area
+      variationSets: [hero-area]
       class: org.sevensource.magnolia.responsivedam.field.link.AspectAwareDamLinkFieldDefinition
       targetWorkspace: dam
       appName: assets
