@@ -8,8 +8,6 @@ import javax.inject.Inject;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
 import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.field.validation.AspectAwareDamLinkFieldValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.ui.Field;
@@ -26,8 +24,6 @@ import info.magnolia.ui.form.field.LinkField;
 import info.magnolia.ui.form.field.factory.LinkFieldFactory;
 
 public class AspectAwareDamLinkFieldFactory extends LinkFieldFactory<AspectAwareDamLinkFieldDefinition> {
-
-	private static final Logger logger = LoggerFactory.getLogger(AspectAwareDamLinkFieldFactory.class);
 
 	private final FormDialogPresenterFactory formDialogPresenterFactory;
 	private final UiContext uiContext;

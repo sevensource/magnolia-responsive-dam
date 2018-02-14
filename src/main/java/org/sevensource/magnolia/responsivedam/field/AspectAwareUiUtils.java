@@ -1,6 +1,6 @@
 package org.sevensource.magnolia.responsivedam.field;
 
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.Label;
 
 public class AspectAwareUiUtils {
 

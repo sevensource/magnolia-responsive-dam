@@ -21,10 +21,10 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
+import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.v7.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.VerticalLayout;
 
 import info.magnolia.dam.app.ui.field.upload.DamUploadField;
 import info.magnolia.i18nsystem.I18nizer;
