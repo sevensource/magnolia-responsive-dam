@@ -17,6 +17,12 @@ import info.magnolia.ui.mediaeditor.field.image.ImageMediaField;
 import info.magnolia.ui.vaadin.editor.JCropField;
 import info.magnolia.ui.vaadin.gwt.shared.jcrop.SelectionArea;
 
+/**
+ * @see ImageMediaField which is currently based on Vaadins v7 CustomField
+ *
+ * @author pgaschuetz
+ *
+ */
 public class FocusAreaSelectionField extends ImageMediaField {
 
 	/**
