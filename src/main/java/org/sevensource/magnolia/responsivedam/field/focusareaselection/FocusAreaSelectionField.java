@@ -19,6 +19,11 @@ import info.magnolia.ui.vaadin.gwt.shared.jcrop.SelectionArea;
 
 public class FocusAreaSelectionField extends ImageMediaField {
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 8706864166695797238L;
+
 	private static final Logger logger = LoggerFactory.getLogger(FocusAreaSelectionField.class);
 
 	private DamVariation selectionVariation;

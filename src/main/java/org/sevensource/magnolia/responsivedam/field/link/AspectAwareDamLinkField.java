@@ -47,6 +47,11 @@ import info.magnolia.ui.vaadin.integration.jcr.JcrNodeAdapter;
 @StyleSheet("vaadin://responsive-dam/aspect-aware-dam-link-field.css")
 public class AspectAwareDamLinkField extends CustomField<String> {
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -8605476084305804096L;
+
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareDamLinkField.class);
 
 	private String workspace;

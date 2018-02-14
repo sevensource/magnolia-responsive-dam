@@ -4,8 +4,6 @@ import javax.inject.Inject;
 
 import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.field.validation.AspectAwareDamUploadFieldValidator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.vaadin.v7.data.Item;
 import com.vaadin.v7.ui.Field;
@@ -22,8 +20,6 @@ import info.magnolia.ui.imageprovider.ImageProvider;
 import info.magnolia.ui.mediaeditor.MediaEditorPresenterFactory;
 
 public class AspectAwareDamUploadFieldFactory extends AbstractFieldFactory<AspectAwareDamUploadFieldDefinition, AspectAwareAssetUploadReceiver> {
-
-	private static final Logger logger = LoggerFactory.getLogger(AspectAwareDamUploadFieldFactory.class);
 
 	private final ResponsiveDamConfiguration responsiveDamConfiguration;
     private final MediaEditorPresenterFactory mediaEditorFactory;

@@ -44,6 +44,12 @@ import info.magnolia.ui.vaadin.overlay.MessageStyleTypeEnum;
 
 @StyleSheet("vaadin://responsive-dam/aspect-aware-dam-upload-field.css")
 public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUploadReceiver> {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -4754770263066766072L;
+
+
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareDamUploadField.class);
 
 
