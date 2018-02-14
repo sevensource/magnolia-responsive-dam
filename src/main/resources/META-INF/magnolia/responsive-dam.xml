@@ -40,7 +40,7 @@
     
     <dependency>
     	<name>imaging</name>
-    	<version>3.3.0/*</version>
+    	<version>3.4/*</version>
     </dependency>
   </dependencies>
    
