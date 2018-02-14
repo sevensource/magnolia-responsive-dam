@@ -13,7 +13,7 @@ import org.sevensource.magnolia.responsivedam.configuration.SizeSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.cms.beans.runtime.FileProperties;
+import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.dam.jcr.AssetNodeTypes;
 import info.magnolia.imaging.OutputFormat;
@@ -75,7 +75,9 @@ public class ResponsiveDamRendition {
 			}
 
 			if(StringUtils.isEmpty(fileName)) {
-				fileName = PropertyUtil.getString(node, FileProperties.PROPERTY_FILENAME);
+				//fileName = PropertyUtil.getString(node, FileProperties.PROPERTY_FILENAME);
+				final File file = new File(node);
+				fileName = file.getFileName();
 			}
 
 			if(StringUtils.isEmpty(fileName)) {

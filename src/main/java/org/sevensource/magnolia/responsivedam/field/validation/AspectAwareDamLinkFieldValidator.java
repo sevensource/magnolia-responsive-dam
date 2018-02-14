@@ -23,6 +23,11 @@ import info.magnolia.ui.form.field.converter.IdentifierToPathConverter;
 
 public class AspectAwareDamLinkFieldValidator extends AbstractAspectAwareFieldValidator<String> {
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -75762225444469699L;
+
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareDamLinkFieldValidator.class);
 
 	private final IdentifierToPathConverter identifierToPathConverter;

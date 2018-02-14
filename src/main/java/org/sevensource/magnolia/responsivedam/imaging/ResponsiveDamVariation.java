@@ -16,16 +16,12 @@ import org.sevensource.magnolia.responsivedam.configuration.DamVariation;
 import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.configuration.SizeSpecification;
 import org.sevensource.magnolia.responsivedam.configuration.SizeSpecification.SizeDimension;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import info.magnolia.dam.jcr.AssetNodeTypes;
 import info.magnolia.imaging.OutputFormat;
 import info.magnolia.jcr.util.PropertyUtil;
 
 public class ResponsiveDamVariation {
-
-	private static final Logger logger = LoggerFactory.getLogger(ResponsiveDamVariation.class);
 
 	private final Long width;
 	private final Long height;

@@ -16,6 +16,10 @@ import com.vaadin.v7.data.validator.AbstractValidator;
 
 public abstract class AbstractAspectAwareFieldValidator<T> extends AbstractValidator<T>{
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -7811330198930824469L;
 	private transient List<DamVariationSet> damVariationSets;
 
 	public AbstractAspectAwareFieldValidator(String errorMessage) {

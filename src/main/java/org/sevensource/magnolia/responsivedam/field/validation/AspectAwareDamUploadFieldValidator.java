@@ -10,6 +10,11 @@ import org.sevensource.magnolia.responsivedam.field.upload.AspectAwareDamUploadF
 public class AspectAwareDamUploadFieldValidator
 		extends AbstractAspectAwareFieldValidator<AspectAwareAssetUploadReceiver> {
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -2204193003003798067L;
+
 	public AspectAwareDamUploadFieldValidator(ResponsiveDamConfiguration responsiveDamConfiguration,
 			AspectAwareDamUploadFieldDefinition fieldDefinition, String errorMessage) {
 		super(errorMessage);

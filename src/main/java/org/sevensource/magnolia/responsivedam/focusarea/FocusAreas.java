@@ -15,10 +15,6 @@ public class FocusAreas {
 		return focusAreaSets;
 	}
 
-//	public void setFocusAreaSets(List<FocusAreaSet> focusAreaSets) {
-//		this.focusAreaSets = focusAreaSets;
-//	}
-
 	public void addFocusAreaSet(FocusAreaSet focusAreaSet) {
 		this.focusAreaSets.add(focusAreaSet);
 	}
