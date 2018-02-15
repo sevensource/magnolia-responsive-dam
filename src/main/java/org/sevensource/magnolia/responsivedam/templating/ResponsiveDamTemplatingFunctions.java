@@ -16,8 +16,6 @@ import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfigu
 import org.sevensource.magnolia.responsivedam.imaging.ResponsiveDamImageGenerator;
 import org.sevensource.magnolia.responsivedam.imaging.ResponsiveDamRendition;
 import org.sevensource.magnolia.responsivedam.imaging.ResponsiveDamVariation;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.google.common.net.MediaType;
 
@@ -31,8 +29,6 @@ import info.magnolia.imaging.OutputFormat;
 
 @Singleton
 public class ResponsiveDamTemplatingFunctions {
-
-	private static final Logger logger = LoggerFactory.getLogger(ResponsiveDamTemplatingFunctions.class);
 
 
 	private final ResponsiveDamConfiguration responsiveDamConfiguration;

@@ -14,6 +14,11 @@ import info.magnolia.i18nsystem.SimpleTranslator;
 
 public class AspectAwareAssetUploadReceiver extends AssetUploadReceiver {
 
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 3215719844406375059L;
+
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareAssetUploadReceiver.class);
 
 	private transient FocusAreas focusAreas = null;

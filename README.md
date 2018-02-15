@@ -2,9 +2,9 @@
 [![Maven Central](https://img.shields.io/maven-central/v/org.sevensource.magnolia/magnolia-responsive-dam.svg?maxAge=3600)](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.sevensource.magnolia%22%20AND%20a%3A%22magnolia-responsive-dam%22)
 [![License](https://img.shields.io/github/license/sevensource/magnolia-responsive-dam.svg)](https://github.com/sevensource/magnolia-responsive-dam/blob/master/LICENSE)
 # magnolia-responsive-dam
-Responsive images for [Magnolia](http://www.magnolia-cms.com) 5.5.x 
-================================
 
+## Responsive images for [Magnolia](http://www.magnolia-cms.com) 5.5, 5.6
+ 
 
 This module provides:
 
@@ -18,6 +18,11 @@ This module provides:
 
 
 **Contributions welcome!**
+
+### Compatibility
+* for Magnolia 5.5, use 0.9.3
+* for Magnolia 5.6, use 1.0.0
+
 
 Installation
 =============

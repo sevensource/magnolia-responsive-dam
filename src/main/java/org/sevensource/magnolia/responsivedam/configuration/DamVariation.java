@@ -1,11 +1,6 @@
 package org.sevensource.magnolia.responsivedam.configuration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 public class DamVariation {
-
-	private static final Logger logger = LoggerFactory.getLogger(DamVariation.class);
 
 	private String name;
 	private DamVariationSet variationSet;

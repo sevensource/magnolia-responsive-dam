@@ -1,5 +1,7 @@
 package org.sevensource.magnolia.responsivedam.field.validation;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
@@ -9,6 +11,11 @@ import org.sevensource.magnolia.responsivedam.field.upload.AspectAwareDamUploadF
 
 public class AspectAwareDamUploadFieldValidator
 		extends AbstractAspectAwareFieldValidator<AspectAwareAssetUploadReceiver> {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -2204193003003798067L;
 
 	public AspectAwareDamUploadFieldValidator(ResponsiveDamConfiguration responsiveDamConfiguration,
 			AspectAwareDamUploadFieldDefinition fieldDefinition, String errorMessage) {
@@ -22,6 +29,14 @@ public class AspectAwareDamUploadFieldValidator
 	protected boolean isValidValue(AspectAwareAssetUploadReceiver value) {
 		if (value == null || !value.isImage()) {
 			return true;
+		}
+
+		try(InputStream is = value.getContentAsStream()) {
+			if(! hasRequiredSize(is)) {
+				return false;
+			}
+		} catch (IOException e) {
+			// do nothing
 		}
 
 		return isValidFocusAreas(value.getFocusAreas());

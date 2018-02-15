@@ -4,7 +4,7 @@
 
 	<groupId>org.sevensource.magnolia</groupId>
 	<artifactId>magnolia-responsive-dam</artifactId>
-	<version>0.9.2</version>
+	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>Magnolia Responsive DAM Module</name>
@@ -15,7 +15,8 @@
 	<properties>
 		<javaVersion>1.8</javaVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<magnoliaVersion>5.5.6</magnoliaVersion>
+		<magnoliaVersion>5.6.1</magnoliaVersion>
+		<magnolia.damApp.version>2.3</magnolia.damApp.version>
 	</properties>
 
 	<inceptionYear>2017</inceptionYear>
@@ -73,8 +74,14 @@
 
 	<dependencies>
 		<dependency>
+			<groupId>info.magnolia.imaging</groupId>
+			<artifactId>magnolia-imaging</artifactId>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
 			<groupId>info.magnolia.dam</groupId>
 			<artifactId>magnolia-dam-app</artifactId>
+			<version>${magnolia.damApp.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -108,7 +115,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.12</version>
 			<scope>test</scope>
 		</dependency>
 		
@@ -123,8 +129,22 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
-				<groupId>info.magnolia.bundle</groupId>
-				<artifactId>magnolia-bundle-parent</artifactId>
+				<groupId>info.magnolia.boms</groupId>
+				<artifactId>magnolia-external-dependencies</artifactId>
+				<version>${magnoliaVersion}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>info.magnolia</groupId>
+				<artifactId>magnolia-project</artifactId>
+				<version>${magnoliaVersion}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>info.magnolia.ui</groupId>
+				<artifactId>magnolia-ui-project</artifactId>
 				<version>${magnoliaVersion}</version>
 				<type>pom</type>
 				<scope>import</scope>

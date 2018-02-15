@@ -21,10 +21,10 @@ import org.slf4j.LoggerFactory;
 
 import com.vaadin.annotations.StyleSheet;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.Layout;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.v7.ui.Label;
+import com.vaadin.v7.ui.VerticalLayout;
 
 import info.magnolia.dam.app.ui.field.upload.DamUploadField;
 import info.magnolia.i18nsystem.I18nizer;
@@ -44,6 +44,12 @@ import info.magnolia.ui.vaadin.overlay.MessageStyleTypeEnum;
 
 @StyleSheet("vaadin://responsive-dam/aspect-aware-dam-upload-field.css")
 public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUploadReceiver> {
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -4754770263066766072L;
+
+
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareDamUploadField.class);
 
 
@@ -234,6 +240,7 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
 		} else {
 			throw new IllegalArgumentException("Neither a variationSet is specified nor useExistingFocusAreas");
 		}
+
 
 		try(final InputStream inputStream = new FileInputStream(getValue().getFile())) {
 			final FocusAreaSelectionPresenter presenter = new FocusAreaSelectionPresenter(actionbarPresenter, dialogPresenter, imageAreaActionExecutor, appContext, i18n);

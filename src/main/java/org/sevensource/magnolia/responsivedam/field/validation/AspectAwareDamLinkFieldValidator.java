@@ -1,12 +1,16 @@
 package org.sevensource.magnolia.responsivedam.field.validation;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
+import javax.jcr.Binary;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.jackrabbit.JcrConstants;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
 import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.field.link.AspectAwareDamLinkFieldDefinition;
@@ -22,6 +26,11 @@ import info.magnolia.jcr.util.PropertyUtil;
 import info.magnolia.ui.form.field.converter.IdentifierToPathConverter;
 
 public class AspectAwareDamLinkFieldValidator extends AbstractAspectAwareFieldValidator<String> {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -75762225444469699L;
 
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareDamLinkFieldValidator.class);
 
@@ -64,6 +73,20 @@ public class AspectAwareDamLinkFieldValidator extends AbstractAspectAwareFieldVa
 
 		if(! isImage(node)) {
 			return true;
+		}
+
+		try {
+			Binary binaryData = node.getProperty(JcrConstants.JCR_DATA).getBinary();
+			try(InputStream is = binaryData.getStream()) {
+				if(! hasRequiredSize(is)) {
+					return false;
+				}
+			}
+		} catch (RepositoryException e1) {
+			logger.error("RepositoryError", e1);
+			return false;
+		} catch (IOException e) {
+			// do nothing
 		}
 
 		final FocusAreas focusAreas = FocusAreasUtil.readFocusAreas(node, node2BeanProcessor);

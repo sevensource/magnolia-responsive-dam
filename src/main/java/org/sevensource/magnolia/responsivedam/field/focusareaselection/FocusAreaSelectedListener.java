@@ -5,5 +5,5 @@ import org.sevensource.magnolia.responsivedam.configuration.DamVariation;
 import info.magnolia.ui.vaadin.gwt.shared.jcrop.SelectionArea;
 
 public interface FocusAreaSelectedListener {
-	public void onAreaSelected(DamVariation variation, SelectionArea selectedArea);
+	void onAreaSelected(DamVariation variation, SelectionArea selectedArea);
 }

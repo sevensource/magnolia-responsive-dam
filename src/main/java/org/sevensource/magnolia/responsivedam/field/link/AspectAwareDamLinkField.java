@@ -16,13 +16,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.annotations.StyleSheet;
-import com.vaadin.data.Property;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Component;
-import com.vaadin.ui.CustomField;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.v7.ui.HorizontalLayout;
+import com.vaadin.v7.ui.Label;
+import com.vaadin.v7.ui.VerticalLayout;
+import com.vaadin.v7.data.Property;
+import com.vaadin.v7.ui.CustomField;
 
 import info.magnolia.config.registry.DefinitionProvider;
 import info.magnolia.config.registry.Registry.InvalidDefinitionException;
@@ -46,6 +46,11 @@ import info.magnolia.ui.vaadin.integration.jcr.JcrNodeAdapter;
 
 @StyleSheet("vaadin://responsive-dam/aspect-aware-dam-link-field.css")
 public class AspectAwareDamLinkField extends CustomField<String> {
+
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = -8605476084305804096L;
 
 	private static final Logger logger = LoggerFactory.getLogger(AspectAwareDamLinkField.class);
 
