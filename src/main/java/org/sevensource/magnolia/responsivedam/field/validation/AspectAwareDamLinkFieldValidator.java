@@ -11,6 +11,7 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.jackrabbit.JcrConstants;
+import org.sevensource.magnolia.responsivedam.ResponsiveDamNodeUtil;
 import org.sevensource.magnolia.responsivedam.configuration.DamVariationSet;
 import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfiguration;
 import org.sevensource.magnolia.responsivedam.field.link.AspectAwareDamLinkFieldDefinition;
@@ -76,7 +77,8 @@ public class AspectAwareDamLinkFieldValidator extends AbstractAspectAwareFieldVa
 		}
 
 		try {
-			Binary binaryData = node.getProperty(JcrConstants.JCR_DATA).getBinary();
+			final Node contentNode = ResponsiveDamNodeUtil.getContentNode(node);
+			Binary binaryData = contentNode.getProperty(JcrConstants.JCR_DATA).getBinary();
 			try(InputStream is = binaryData.getStream()) {
 				if(! hasRequiredSize(is)) {
 					return false;

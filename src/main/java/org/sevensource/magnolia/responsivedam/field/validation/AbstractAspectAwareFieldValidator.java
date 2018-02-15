@@ -85,8 +85,8 @@ public abstract class AbstractAspectAwareFieldValidator<T> extends AbstractValid
 		final Dimension requiredDimension = getRequiredImageDimensions(damVariationSets);
 
 
-		return requiredDimension.getHeight() >= imageDimensions.getHeight() &&
-				requiredDimension.getWidth() >= imageDimensions.getWidth();
+		return requiredDimension.getHeight() <= imageDimensions.getHeight() &&
+				requiredDimension.getWidth() <= imageDimensions.getWidth();
 	}
 
 	public static Dimension getRequiredImageDimensions(List<DamVariationSet> damVariationSets) {
