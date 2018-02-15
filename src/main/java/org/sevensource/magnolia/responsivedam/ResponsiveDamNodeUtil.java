@@ -7,10 +7,15 @@ import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 
 import org.apache.jackrabbit.JcrConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import info.magnolia.context.MgnlContext;
 
 public class ResponsiveDamNodeUtil {
+
+	private static final Logger logger = LoggerFactory.getLogger(ResponsiveDamNodeUtil.class);
+
 	private static final Pattern IDENTIFIER_PATTERN = Pattern.compile("[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}", Pattern.CASE_INSENSITIVE);
 
 	private ResponsiveDamNodeUtil() {}
@@ -26,17 +31,23 @@ public class ResponsiveDamNodeUtil {
 		return getContentNode(node);
 	}
 
-	public static Node getContentNode(Node node) throws RepositoryException {
-		if(node.getName().equals(JcrConstants.JCR_CONTENT)) {
-			return node;
-		} else {
-			NodeIterator it = node.getNodes(JcrConstants.JCR_CONTENT);
-			if(! it.hasNext()) {
-				final String msg = String.format("Node %s has no child named %s", node.getPath(), JcrConstants.JCR_CONTENT);
-				throw new IllegalArgumentException(msg);
+	public static Node getContentNode(Node node) {
+		try {
+			if(node.getName().equals(JcrConstants.JCR_CONTENT)) {
+				return node;
+			} else {
+				NodeIterator it = node.getNodes(JcrConstants.JCR_CONTENT);
+				if(! it.hasNext()) {
+					final String msg = String.format("Node %s has no child named %s", node.getPath(), JcrConstants.JCR_CONTENT);
+					throw new IllegalArgumentException(msg);
+				}
+				return it.nextNode();
 			}
-			return it.nextNode();
+		} catch (RepositoryException e) {
+			logger.error("An unexpected error occurred while retrieving JCR content", e);
 		}
+
+		return null;
 	}
 
 	public static Node getContainerNode(Node node) throws RepositoryException {

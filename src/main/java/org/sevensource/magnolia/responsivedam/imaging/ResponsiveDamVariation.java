@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.jcr.Node;
-import javax.jcr.RepositoryException;
 
 import org.sevensource.magnolia.responsivedam.ResponsiveDamNodeUtil;
 import org.sevensource.magnolia.responsivedam.configuration.DamSizeConstraints;
@@ -32,13 +31,20 @@ public class ResponsiveDamVariation {
 	private final List<OutputFormat> outputFormats;
 	private final List<ResponsiveDamRendition> renditions;
 
+	/**
+	 *
+	 * @param node
+	 * @param damVariation
+	 * @param responsiveDamConfiguration
+	 *
+	 * @throws RuntimeException if the node contains no responsive image
+	 */
 	public ResponsiveDamVariation(Node node, DamVariation damVariation, ResponsiveDamConfiguration responsiveDamConfiguration) {
 
-		final Node contentNode;
-		try {
-			contentNode = ResponsiveDamNodeUtil.getContentNode(node);
-		} catch(RepositoryException e) {
-			throw new RuntimeException(e);
+		final Node contentNode = ResponsiveDamNodeUtil.getContentNode(node);
+
+		if(contentNode == null) {
+			throw new IllegalArgumentException("Cannot get contentNode");
 		}
 
 		this.width = PropertyUtil.getLong(contentNode, AssetNodeTypes.AssetResource.WIDTH);
