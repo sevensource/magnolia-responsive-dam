@@ -195,8 +195,8 @@ public class AspectAwareDamUploadField extends DamUploadField<AspectAwareAssetUp
 	}
 
 	private void openAspectsEditor() throws FileNotFoundException {
-    		if (logger.isInfoEnabled()) {
-			logger.info("Setting aspects");
+    		if (logger.isDebugEnabled()) {
+			logger.debug("Setting aspects");
 		}
 
 		final DialogActionExecutor actionExecutor = new DialogActionExecutor(componentProvider);

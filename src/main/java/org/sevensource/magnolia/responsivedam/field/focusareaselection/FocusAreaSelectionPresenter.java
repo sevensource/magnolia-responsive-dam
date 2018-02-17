@@ -173,10 +173,6 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
 	}
 
 	private void onCompleted(boolean canceled, String actionName) {
-		if (logger.isInfoEnabled()) {
-			logger.info("Dialog complete with {}", actionName);
-		}
-
 		completionListener.completed(canceled, canceled ? null : focusAreas);
 	}
 
