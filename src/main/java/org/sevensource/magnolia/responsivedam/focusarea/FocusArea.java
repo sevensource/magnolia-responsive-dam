@@ -24,13 +24,14 @@ public class FocusArea {
 	}
 
 	public boolean isValid() {
-		if(x == null || y == null || width == null || height == null) {
-			return false;
-		} else if(width < 1 || height < 1 || x < 0 || y < 0) {
-			return false;
-		} else {
-			return true;
-		}
+		return checkMinimumValue(x, 0) &&
+				checkMinimumValue(y, 0) &&
+				checkMinimumValue(width, 1) &&
+				checkMinimumValue(height, 1);
+	}
+	
+	private static boolean checkMinimumValue(Integer val, int minimum) {
+		return val != null && val >= minimum;
 	}
 
 	public String getName() {

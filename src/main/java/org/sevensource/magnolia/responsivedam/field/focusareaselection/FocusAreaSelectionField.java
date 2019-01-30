@@ -67,7 +67,8 @@ public class FocusAreaSelectionField extends ImageMediaField {
 			jcropField.setTrueHeight(image.getHeight());
 			jcropField.setTrueWidth(image.getWidth());
 			jcropField.setImageSource(createResourceFromValue());
-
+			jcropField.setSizeUndefined();
+			
 			updateJcropOptions();
 		} catch (IOException e) {
 			logger.error("Error reading the image data: " + e.getMessage(), e);

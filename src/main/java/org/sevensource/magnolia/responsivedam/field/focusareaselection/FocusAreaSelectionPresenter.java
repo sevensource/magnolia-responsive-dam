@@ -46,7 +46,7 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
 	private final DialogPresenter dialogPresenter;
 	private final DialogActionExecutor actionExecutor;
 	private final AppContext appContext;
-	private MediaEditorViewImpl view = new MediaEditorViewImpl();
+	private MediaEditorViewImpl view;
 	private final SimpleTranslator i18n;
 
 	private FocusAreas focusAreas;
@@ -66,6 +66,7 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
 		this.actionExecutor = actionExecutor;
 		this.appContext = appContext;
 		this.i18n = i18n;
+		this.view = new MediaEditorViewImpl(i18n);
 	}
 
 	public void setCompletedListener(FocusAreaSelectionCompletedListener callback) {
@@ -83,6 +84,7 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
 		final ActionbarView actionbar = actionbarPresenter.start(actionbarDefinition, actionbarActions);
 		actionbarPresenter.setListener(this::executeMediaEditorAction);
 		view.setActionBar(actionbar);
+		
 
 		final DialogView dialogView = dialogPresenter.start(new ConfiguredDialogDefinition(), appContext);
 		view.setDialog(dialogView);
@@ -95,6 +97,7 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
 			imageAreaSelectionField = new FocusAreaSelectionField(this);
 			byte[] img = IOUtils.toByteArray(is);
 			imageAreaSelectionField.setValue(img);
+			
 			view.setMediaContent(imageAreaSelectionField);
 		} catch (IOException e) {
 			throw new RuntimeException("IOException during image read", e);
@@ -104,8 +107,8 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
 		dialogDefinition.setActions(actionbarActions);
 		actionExecutor.setDialogDefinition(dialogDefinition);
 
-		view.asVaadinComponent()
-				.addAttachListener(e -> executeMediaEditorAction(FocusAreaSelectionUiHelper.SCALE_TO_FIT));
+//		view.asVaadinComponent()
+//				.addAttachListener(e -> executeMediaEditorAction(FocusAreaSelectionUiHelper.SCALE_TO_FIT));
 		return view;
 	}
 

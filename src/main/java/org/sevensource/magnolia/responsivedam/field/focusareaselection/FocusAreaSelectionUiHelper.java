@@ -26,10 +26,6 @@ import info.magnolia.ui.dialog.actionarea.renderer.ActionRenderer;
 import info.magnolia.ui.dialog.actionarea.renderer.DefaultEditorActionRenderer;
 import info.magnolia.ui.mediaeditor.MediaEditorView;
 import info.magnolia.ui.mediaeditor.action.ActionContext;
-import info.magnolia.ui.mediaeditor.action.definition.ScaleToActualSizeActionDefinition;
-import info.magnolia.ui.mediaeditor.action.definition.ScaleToFitActionDefinition;
-import info.magnolia.ui.mediaeditor.action.feature.ScaleToActualSizeAction;
-import info.magnolia.ui.mediaeditor.action.feature.ScaleToFitAction;
 
 public class FocusAreaSelectionUiHelper {
 
@@ -43,14 +39,14 @@ public class FocusAreaSelectionUiHelper {
 	static Map<String, ActionDefinition> buildActionbarActions(List<DamVariationSet> damVariationSets) {
 		Map<String, ActionDefinition> actions = new HashMap<>();
 
-		actions.put(SCALE_TO_ACTUAL, buildActionDefinition("Zoom to actual size", "icon-view-in-actual-size", ScaleToActualSizeAction.class, new ScaleToActualSizeActionDefinition()));
-		actions.put(SCALE_TO_FIT, buildActionDefinition("Zoom to fit", "icon-zoom-to-fit", ScaleToFitAction.class, new ScaleToFitActionDefinition()));
+//		actions.put(SCALE_TO_ACTUAL, buildActionDefinition("Zoom to actual size", "icon-view-in-actual-size", ScaleToActualSizeAction.class, new ScaleToActualSizeActionDefinition()));
+//		actions.put(SCALE_TO_FIT, buildActionDefinition("Zoom to fit", "icon-zoom-to-fit", ScaleToFitAction.class, new ScaleToFitActionDefinition()));
 
 		for(DamVariationSet damVariationSet : damVariationSets) {
 			for(DamVariation variation : damVariationSet.getVariations()) {
 				final SelectionActionDefinition sad = new SelectionActionDefinition(variation);
 				final String actionId = buildActionId(variation);
-				final String actionLabel = buildDamVariationLabel(variation, false);
+				final String actionLabel = buildDamVariationLabel(variation, true);
 				actions.put(actionId,
 						buildActionDefinition(actionLabel, "icon-view", SelectionAction.class, sad));
 			}
@@ -80,31 +76,22 @@ public class FocusAreaSelectionUiHelper {
 		definition.addSection(section);
 
 		for(DamVariationSet damVariationSet : damVariationSets) {
-			final ConfiguredActionbarSectionDefinition variationSetSection = new ConfiguredActionbarSectionDefinition();
-			variationSetSection.setName("variationSet_" + damVariationSet.getName());
-			variationSetSection.setLabel(damVariationSet.getName());
-			definition.addSection(variationSetSection);
-
 			final ConfiguredActionbarGroupDefinition variationGroup = new ConfiguredActionbarGroupDefinition();
 			variationGroup.setName("variationGroup_" + damVariationSet.getName());
-			variationSetSection.addGroup(variationGroup);
+			section.addGroup(variationGroup);
 
 			for(DamVariation spec : damVariationSet.getVariations()) {
 				final String actionId = buildActionId(spec);
 				variationGroup.addItem(buildActionbarItemDefinition(actionId));
 			}
 		}
-
-
-		final ConfiguredActionbarSectionDefinition utilitySection = new ConfiguredActionbarSectionDefinition();
-		utilitySection.setName("Zoom");
-		definition.addSection(utilitySection);
-		final ConfiguredActionbarGroupDefinition utilityGroup = new ConfiguredActionbarGroupDefinition();
-		utilityGroup.setName("utility");
-		utilitySection.addGroup(utilityGroup);
-
-		utilityGroup.addItem(buildActionbarItemDefinition(SCALE_TO_FIT));
-		utilityGroup.addItem(buildActionbarItemDefinition(SCALE_TO_ACTUAL));
+		
+//		final ConfiguredActionbarGroupDefinition utilityGroup = new ConfiguredActionbarGroupDefinition();
+//		utilityGroup.setName("utility");
+//		section.addGroup(utilityGroup);
+//
+//		utilityGroup.addItem(buildActionbarItemDefinition(SCALE_TO_FIT));
+//		utilityGroup.addItem(buildActionbarItemDefinition(SCALE_TO_ACTUAL));
 
 		return definition;
 	}
