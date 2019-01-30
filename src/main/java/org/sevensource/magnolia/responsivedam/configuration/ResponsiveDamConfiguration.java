@@ -12,15 +12,13 @@ import info.magnolia.imaging.OutputFormat;
 @Singleton
 public class ResponsiveDamConfiguration {
 
-	private final static String DEFAULT_MIME_TYPE = "image/*";
+	private static final String DEFAULT_MIME_TYPE = "image/*";
 
 	private Set<DamVariationSet> variationSets;
 	private List<OutputFormatMapping> outputFormatMappings;
 
 	public DamVariationSet getVariationSet(String name) {
-		if(StringUtils.isEmpty(name)) {
-			return null;
-		} else if(variationSets == null) {
+		if(StringUtils.isEmpty(name) || variationSets == null) {
 			return null;
 		}
 
