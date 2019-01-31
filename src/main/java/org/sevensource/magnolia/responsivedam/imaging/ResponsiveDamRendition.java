@@ -75,7 +75,6 @@ public class ResponsiveDamRendition {
 			}
 
 			if(StringUtils.isEmpty(fileName)) {
-				//fileName = PropertyUtil.getString(node, FileProperties.PROPERTY_FILENAME);
 				final File file = new File(node);
 				fileName = file.getFileName();
 			}

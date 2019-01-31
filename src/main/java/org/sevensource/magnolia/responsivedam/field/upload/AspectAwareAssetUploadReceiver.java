@@ -29,7 +29,7 @@ public class AspectAwareAssetUploadReceiver extends AssetUploadReceiver {
 	}
 
 	@Override
-	public OutputStream receiveUpload(String filename, String MIMEType) {
+	public OutputStream receiveUpload(String filename, String mimeType) {
 		if (this.getFile() != null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("New Upload received, resetting Focus Area");
@@ -37,7 +37,7 @@ public class AspectAwareAssetUploadReceiver extends AssetUploadReceiver {
 			setFocusArea(null);
 		}
 
-		return super.receiveUpload(filename, MIMEType);
+		return super.receiveUpload(filename, mimeType);
 	}
 
 	@Override

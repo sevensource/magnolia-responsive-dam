@@ -51,7 +51,7 @@ public class FocusAreasUtil {
 					final FocusArea focusArea = readFocusArea(focusAreaNode, node2BeanProcessor);
 
 
-					if(focusArea != null && focusArea.isValid()) {
+					if(focusArea.isValid()) {
 						focusAreaSet.addFocusArea(focusArea);
 					} else {
 						if (logger.isInfoEnabled()) {

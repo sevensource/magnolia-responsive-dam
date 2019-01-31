@@ -18,8 +18,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.vaadin.ui.Component;
-import com.vaadin.v7.ui.HorizontalLayout;
-import com.vaadin.v7.ui.Label;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 
 import info.magnolia.i18nsystem.SimpleTranslator;
 import info.magnolia.ui.actionbar.ActionbarPresenter;
@@ -46,7 +46,7 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
 	private final DialogPresenter dialogPresenter;
 	private final DialogActionExecutor actionExecutor;
 	private final AppContext appContext;
-	private MediaEditorViewImpl view = new MediaEditorViewImpl();
+	private MediaEditorViewImpl view;
 	private final SimpleTranslator i18n;
 
 	private FocusAreas focusAreas;
@@ -66,6 +66,7 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
 		this.actionExecutor = actionExecutor;
 		this.appContext = appContext;
 		this.i18n = i18n;
+		this.view = new MediaEditorViewImpl(i18n);
 	}
 
 	public void setCompletedListener(FocusAreaSelectionCompletedListener callback) {
@@ -83,6 +84,7 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
 		final ActionbarView actionbar = actionbarPresenter.start(actionbarDefinition, actionbarActions);
 		actionbarPresenter.setListener(this::executeMediaEditorAction);
 		view.setActionBar(actionbar);
+		
 
 		final DialogView dialogView = dialogPresenter.start(new ConfiguredDialogDefinition(), appContext);
 		view.setDialog(dialogView);
@@ -95,6 +97,7 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
 			imageAreaSelectionField = new FocusAreaSelectionField(this);
 			byte[] img = IOUtils.toByteArray(is);
 			imageAreaSelectionField.setValue(img);
+			
 			view.setMediaContent(imageAreaSelectionField);
 		} catch (IOException e) {
 			throw new RuntimeException("IOException during image read", e);
@@ -104,8 +107,8 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
 		dialogDefinition.setActions(actionbarActions);
 		actionExecutor.setDialogDefinition(dialogDefinition);
 
-		view.asVaadinComponent()
-				.addAttachListener(e -> executeMediaEditorAction(FocusAreaSelectionUiHelper.SCALE_TO_FIT));
+//		view.asVaadinComponent()
+//				.addAttachListener(e -> executeMediaEditorAction(FocusAreaSelectionUiHelper.SCALE_TO_FIT));
 		return view;
 	}
 
@@ -173,10 +176,6 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
 	}
 
 	private void onCompleted(boolean canceled, String actionName) {
-		if (logger.isInfoEnabled()) {
-			logger.info("Dialog complete with {}", actionName);
-		}
-
 		completionListener.completed(canceled, canceled ? null : focusAreas);
 	}
 
