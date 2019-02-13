@@ -86,7 +86,8 @@ public class ResponsiveDamVariation {
 	}
 
 	public ResponsiveDamRendition getDefaultRendition() {
-		return renditions.isEmpty() ? null : renditions.get(0);
+		final OutputFormat primaryOutputFormat = getPrimaryOutputFormat();
+		return getDefaultRendition(primaryOutputFormat);
 	}
 
 	public ResponsiveDamRendition getDefaultRendition(OutputFormat outputFormat) {
