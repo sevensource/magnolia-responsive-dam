@@ -1,5 +1,7 @@
 package org.sevensource.magnolia.responsivedam.focusarea;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
 public class FocusArea {
 	private String name;
 
@@ -72,6 +74,11 @@ public class FocusArea {
 
 	public void setHeight(Integer height) {
 		this.height = height;
+	}
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
 	}
 
 	@Override

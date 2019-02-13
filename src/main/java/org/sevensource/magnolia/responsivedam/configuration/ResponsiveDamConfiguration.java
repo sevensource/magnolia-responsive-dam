@@ -45,10 +45,14 @@ public class ResponsiveDamConfiguration {
 			.findFirst()
 			.orElse(null);
 
-		if(retVal == null && ! DEFAULT_MIME_TYPE.equalsIgnoreCase(mimeType)) {
-			return getOutputFormatsByMimeType(DEFAULT_MIME_TYPE);
+		if(retVal == null) {
+			if(! DEFAULT_MIME_TYPE.equalsIgnoreCase(mimeType)) {
+				return getOutputFormatsByMimeType(DEFAULT_MIME_TYPE);	
+			} else {
+				throw new IllegalArgumentException("No configuration for " + DEFAULT_MIME_TYPE);
+			}
 		}
-
+		
 		return retVal;
 	}
 
