@@ -33,9 +33,9 @@ public class ResponsiveDamVariation {
 
 	/**
 	 *
-	 * @param node
-	 * @param damVariation
-	 * @param responsiveDamConfiguration
+	 * @param node the content node
+	 * @param damVariation the damVariation
+	 * @param responsiveDamConfiguration global ResponsiveDamConfigurations
 	 *
 	 * @throws RuntimeException if the node contains no responsive image
 	 */
