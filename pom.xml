@@ -11,6 +11,13 @@
 	<description>DAM field and support for magnolia, which allows aspects for images</description>
 	<url>http://www.github.com/sevensource/magnolia-responsive-dam</url>
 
+	<parent>
+		<groupId>org.sevensource.parents</groupId>
+		<artifactId>sevensource-oss-build</artifactId>
+		<version>1.8</version>
+		<relativePath /> <!-- lookup parent from repository -->
+	</parent>
+
 
 	<properties>
 		<javaVersion>1.8</javaVersion>
@@ -179,99 +186,6 @@
 				<artifactId>nexus-staging-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.8.0</version>
-					<configuration>
-						<source>${javaVersion}</source>
-						<target>${javaVersion}</target>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>com.amashchenko.maven.plugin</groupId>
-					<artifactId>gitflow-maven-plugin</artifactId>
-					<version>1.10.0</version>
-					<configuration>
-						<verbose>false</verbose>
-						<installProject>false</installProject>
-						<fetchRemote>true</fetchRemote>
-						<pushRemote>true</pushRemote>
-						<gitFlowConfig>
-							<versionTagPrefix>v</versionTagPrefix>
-						</gitFlowConfig>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.20</version>
-					<configuration>
-						<useSystemClassLoader>false</useSystemClassLoader>
-					</configuration>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-source-plugin</artifactId>
-					<version>3.0.1</version>
-					<executions>
-						<execution>
-							<id>attach-sources</id>
-							<goals>
-								<goal>jar-no-fork</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-javadoc-plugin</artifactId>
-					<version>2.10.4</version>
-					<executions>
-						<execution>
-							<id>attach-javadocs</id>
-							<goals>
-								<goal>jar</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-gpg-plugin</artifactId>
-					<version>1.6</version>
-					<executions>
-						<execution>
-							<id>sign-artifacts</id>
-							<phase>verify</phase>
-							<goals>
-								<goal>sign</goal>
-							</goals>
-						</execution>
-					</executions>
-				</plugin>
-
-				<plugin>
-					<groupId>org.sonatype.plugins</groupId>
-					<artifactId>nexus-staging-maven-plugin</artifactId>
-					<version>1.6.8</version>
-					<extensions>true</extensions>
-					<configuration>
-						<serverId>ossrh</serverId>
-						<nexusUrl>https://oss.sonatype.org/</nexusUrl>
-						<autoReleaseAfterClose>true</autoReleaseAfterClose>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
 
 		<resources>
 			<resource>
