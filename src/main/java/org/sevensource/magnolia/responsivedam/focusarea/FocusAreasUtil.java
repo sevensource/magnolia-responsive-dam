@@ -55,7 +55,7 @@ public class FocusAreasUtil {
 						focusAreaSet.addFocusArea(focusArea);
 					} else {
 						if (logger.isInfoEnabled()) {
-							logger.info("FocusArea at {}/{}/{} is invalid", parentNode.getPath(), focusAreaSetName, focusAreaName);
+							logger.info("FocusArea at {}/{}/{} is invalid ({})", parentNode.getPath(), focusAreaSetName, focusAreaName, focusArea);
 						}
 					}
 				}

@@ -243,6 +243,11 @@ public class AspectAwareAssetTransformer extends AssetTransformer<AspectAwareAss
 		final Integer h = longToInteger(pH.getValue());
 
 		final FocusArea focusArea = new FocusArea(focusAreaName, x, y, w, h);
+		
+		if(logger.isDebugEnabled() && ! focusArea.isValid()) {
+			logger.warn("FocusArea read is not valid: {}", focusArea);
+		}
+		
 		return focusArea.isValid() ? focusArea : null;
 	}
 }

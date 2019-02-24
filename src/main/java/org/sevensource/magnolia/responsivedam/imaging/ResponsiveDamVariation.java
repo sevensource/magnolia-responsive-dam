@@ -86,7 +86,8 @@ public class ResponsiveDamVariation {
 	}
 
 	public ResponsiveDamRendition getDefaultRendition() {
-		return renditions.isEmpty() ? null : renditions.get(0);
+		final OutputFormat primaryOutputFormat = getPrimaryOutputFormat();
+		return getDefaultRendition(primaryOutputFormat);
 	}
 
 	public ResponsiveDamRendition getDefaultRendition(OutputFormat outputFormat) {
@@ -119,7 +120,11 @@ public class ResponsiveDamVariation {
 	}
 
 	public OutputFormat getPrimaryOutputFormat() {
-		return outputFormats.isEmpty() ? null : outputFormats.get(0);
+		return outputFormats
+			.stream()
+			.filter(f -> ! "webp".equalsIgnoreCase(f.getFormatName()))
+			.findFirst()
+			.orElse(null);
 	}
 
 	private List<SizeSpecification> initSizes() {
