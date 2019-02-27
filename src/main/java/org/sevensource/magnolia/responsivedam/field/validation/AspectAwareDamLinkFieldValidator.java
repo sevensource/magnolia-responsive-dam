@@ -48,6 +48,21 @@ public class AspectAwareDamLinkFieldValidator extends AbstractAspectAwareFieldVa
 		this.identifierToPathConverter = fieldDefinition.getIdentifierToPathConverter();
 		this.node2BeanProcessor = node2BeanProcessor;
 	}
+	
+	public boolean isValidImageNode(String value) {
+		if(StringUtils.isEmpty(value)) {
+			return false;
+		}
+		
+		final String fieldValue = identifierToPathConverter.convertToPresentation(value, String.class, null);
+
+		try {
+			return MgnlContext.getJCRSession(getWorkspace()).nodeExists(fieldValue);
+		}  catch (RepositoryException e) {
+			logger.error("Could not get item from path:", e);
+			return false;
+		}
+	}
 
 
 	public boolean isImage(String value) {

@@ -106,7 +106,12 @@ public class AspectAwareDamLinkField extends CustomField<String> {
 				.filter(v -> v instanceof AspectAwareDamLinkFieldValidator).findFirst().orElse(null);
 
 		if (validator != null) {
-			if (!validator.isImage(getValue())) {
+			if(! validator.isValidImageNode(getValue())) {
+				if(infoLayout != null) {
+					infoLayout.setVisible(false);
+				}
+			}
+			else if (!validator.isImage(getValue())) {
 				infoLayout.setVisible(false);
 			} else if (validator.isValid(getValue())) {
 				AspectAwareUiUtils.updateInfoLabel(this.infoLabel, i18n.translate(aspectsSetOkTxt), InfoLabelStyle.OK);
