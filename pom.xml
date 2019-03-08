@@ -134,7 +134,7 @@
 	</dependencies>
 
 	<dependencyManagement>
-		<dependencies>
+		<dependencies>		
 			<dependency>
 				<groupId>info.magnolia.boms</groupId>
 				<artifactId>magnolia-external-dependencies</artifactId>

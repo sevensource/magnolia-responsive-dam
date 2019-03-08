@@ -4,8 +4,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Base64;
-import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -16,6 +16,8 @@ import org.sevensource.magnolia.responsivedam.configuration.ResponsiveDamConfigu
 import org.sevensource.magnolia.responsivedam.imaging.ResponsiveDamImageGenerator;
 import org.sevensource.magnolia.responsivedam.imaging.ResponsiveDamRendition;
 import org.sevensource.magnolia.responsivedam.imaging.ResponsiveDamVariation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.common.net.MediaType;
 
@@ -30,6 +32,9 @@ import info.magnolia.imaging.OutputFormat;
 @Singleton
 public class ResponsiveDamTemplatingFunctions {
 
+	private static final Logger logger = LoggerFactory.getLogger(ResponsiveDamTemplatingFunctions.class);
+
+	public static final String FUNCTIONS_NAME = "responsivedamfn";
 
 	private final ResponsiveDamConfiguration responsiveDamConfiguration;
 	private final Imaging imaging;
@@ -44,10 +49,16 @@ public class ResponsiveDamTemplatingFunctions {
 	}
 
 	public String getBase64EncodedRendition(ResponsiveDamRendition rendition) throws IOException, ImagingException {
-		final ByteArrayOutputStream os = new ByteArrayOutputStream();
-		imaging.generate(ResponsiveDamImageGenerator.GENERATOR_NAME, rendition, new TemporaryImageResponse(os));
+		try {
+			final ByteArrayOutputStream os = new ByteArrayOutputStream();
+			imaging.generate(ResponsiveDamImageGenerator.GENERATOR_NAME, rendition, new TemporaryImageResponse(os));
 
-		return Base64.getEncoder().encodeToString(os.toByteArray());
+			return Base64.getEncoder().encodeToString(os.toByteArray());			
+		} catch(Exception e) {
+			logger.error("Exception while encoding image as base64", e);
+			return "";
+		}
+
 	}
 
 	public String getDataUriEncodedRendition(ResponsiveDamRendition rendition) throws IOException, ImagingException {
@@ -58,20 +69,27 @@ public class ResponsiveDamTemplatingFunctions {
 	}
 
 	public String generateSrcSet(List<ResponsiveDamRendition> renditions) {
-		StringBuilder builder = new StringBuilder();
-
-		final Iterator<ResponsiveDamRendition> it = renditions.iterator();
-		while(it.hasNext()) {
-			final ResponsiveDamRendition rendition = it.next();
-			builder.append(rendition.getLink());
-			builder.append(" ");
-			builder.append(rendition.getSize().toString());
-			if(it.hasNext()) {
-				builder.append(", ");
-			}
-		}
-
-		return builder.toString();
+		
+		return renditions
+			.stream()
+			.map(r -> r.getLink() + " " + r.getSize().toString())
+			.collect(Collectors.joining(", "));
+		
+		
+//		StringBuilder builder = new StringBuilder();
+//
+//		final Iterator<ResponsiveDamRendition> it = renditions.iterator();
+//		while(it.hasNext()) {
+//			final ResponsiveDamRendition rendition = it.next();
+//			builder.append(rendition.getLink());
+//			builder.append(" ");
+//			builder.append(rendition.getSize().toString());
+//			if(it.hasNext()) {
+//				builder.append(", ");
+//			}
+//		}
+//
+//		return builder.toString();
 	}
 
 	public ResponsiveDamVariation getResponsiveVariation(Node node, String variationSetName, String variationName) {
