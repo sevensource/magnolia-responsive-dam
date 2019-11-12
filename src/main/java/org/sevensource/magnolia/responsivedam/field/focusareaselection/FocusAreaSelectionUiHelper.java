@@ -29,7 +29,6 @@ import info.magnolia.ui.mediaeditor.action.ActionContext;
 
 public class FocusAreaSelectionUiHelper {
 
-	private static final String SCALE_TO_ACTUAL = "scaleToActual";
 	static final String SCALE_TO_FIT = "scaleToFit";
 	private static final String SELECT_PREFIX = "select_";
 
@@ -38,9 +37,6 @@ public class FocusAreaSelectionUiHelper {
 
 	static Map<String, ActionDefinition> buildActionbarActions(List<DamVariationSet> damVariationSets) {
 		Map<String, ActionDefinition> actions = new HashMap<>();
-
-//		actions.put(SCALE_TO_ACTUAL, buildActionDefinition("Zoom to actual size", "icon-view-in-actual-size", ScaleToActualSizeAction.class, new ScaleToActualSizeActionDefinition()));
-//		actions.put(SCALE_TO_FIT, buildActionDefinition("Zoom to fit", "icon-zoom-to-fit", ScaleToFitAction.class, new ScaleToFitActionDefinition()));
 
 		for(DamVariationSet damVariationSet : damVariationSets) {
 			for(DamVariation variation : damVariationSet.getVariations()) {
@@ -86,13 +82,6 @@ public class FocusAreaSelectionUiHelper {
 			}
 		}
 		
-//		final ConfiguredActionbarGroupDefinition utilityGroup = new ConfiguredActionbarGroupDefinition();
-//		utilityGroup.setName("utility");
-//		section.addGroup(utilityGroup);
-//
-//		utilityGroup.addItem(buildActionbarItemDefinition(SCALE_TO_FIT));
-//		utilityGroup.addItem(buildActionbarItemDefinition(SCALE_TO_ACTUAL));
-
 		return definition;
 	}
 
@@ -125,7 +114,9 @@ public class FocusAreaSelectionUiHelper {
 			ActionContext action = it.next();
 			ActionRenderer actionRenderer = new DefaultEditorActionRenderer();
 			View actionView = actionRenderer.start(action.getDefinition(), action.getListener());
-			view.getDialog().getActionAreaView().addPrimaryAction(actionView, action.getDefinition().getName());
+			
+			view.getEditorActionLayout().addPrimaryAction(actionView.asVaadinComponent());
+			
 			if (!defaultIsSet) {
 				defaultAction = actionView.asVaadinComponent();
 				defaultAction.addStyleName("default");

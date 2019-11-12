@@ -22,8 +22,8 @@
 	<properties>
 		<javaVersion>1.8</javaVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<magnoliaVersion>6.0</magnoliaVersion>
-		<magnolia.damApp.version>2.5</magnolia.damApp.version>
+		<magnoliaVersion>6.1.3</magnoliaVersion>
+		<magnolia.damApp.version>2.6</magnolia.damApp.version>
 	</properties>
 
 	<inceptionYear>2017</inceptionYear>
