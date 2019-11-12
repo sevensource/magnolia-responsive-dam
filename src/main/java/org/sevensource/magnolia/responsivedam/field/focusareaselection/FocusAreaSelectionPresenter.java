@@ -30,7 +30,6 @@ import info.magnolia.ui.api.action.ActionExecutionException;
 import info.magnolia.ui.api.app.AppContext;
 import info.magnolia.ui.api.view.View;
 import info.magnolia.ui.dialog.DialogPresenter;
-import info.magnolia.ui.dialog.DialogView;
 import info.magnolia.ui.dialog.actionarea.DialogActionExecutor;
 import info.magnolia.ui.dialog.definition.ConfiguredDialogDefinition;
 import info.magnolia.ui.mediaeditor.MediaEditorViewImpl;
@@ -84,10 +83,6 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
 		final ActionbarView actionbar = actionbarPresenter.start(actionbarDefinition, actionbarActions);
 		actionbarPresenter.setListener(this::executeMediaEditorAction);
 		view.setActionBar(actionbar);
-		
-
-		final DialogView dialogView = dialogPresenter.start(new ConfiguredDialogDefinition(), appContext);
-		view.setDialog(dialogView);
 
 		view.setToolbar(buildToolbar());
 
@@ -107,8 +102,6 @@ public class FocusAreaSelectionPresenter implements FocusAreaSelectedListener {
 		dialogDefinition.setActions(actionbarActions);
 		actionExecutor.setDialogDefinition(dialogDefinition);
 
-//		view.asVaadinComponent()
-//				.addAttachListener(e -> executeMediaEditorAction(FocusAreaSelectionUiHelper.SCALE_TO_FIT));
 		return view;
 	}
 

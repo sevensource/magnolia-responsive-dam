@@ -3,8 +3,8 @@
 [![License](https://img.shields.io/github/license/sevensource/magnolia-responsive-dam.svg)](https://github.com/sevensource/magnolia-responsive-dam/blob/master/LICENSE)
 # magnolia-responsive-dam
 
-## Responsive images for [Magnolia](http://www.magnolia-cms.com) 5.5, 5.6
- 
+## Responsive images for [Magnolia](http://www.magnolia-cms.com) 5.5 to 6.1
+
 
 This module provides:
 
@@ -20,8 +20,12 @@ This module provides:
 **Contributions welcome!**
 
 ### Compatibility
-* for Magnolia 5.5, use 0.9.3
-* for Magnolia 5.6, use 1.0.0
+| Magnolia version  | Responsive DAM version |
+| ------------- | ------------- |
+| 5.5           | 0.9           |
+| 5.6           | 1.0           |
+| 6.0           | 1.1           |
+| 6.1           | 1.2           |
 
 
 Installation
@@ -35,7 +39,7 @@ The module is available on Maven central
 </dependency>
 ```
 
-Upon module installation, 
+Upon module installation,
 * a contextAttribute (_responsivedamfn_) is installed into `/modules/rendering/renderers/freemarker/contextAttributes`
 * the ImageOperationChain is installed into `/modules/imaging/config/generators/rd`
 * a default config is installed into `/modules/responsive-dam/config`
