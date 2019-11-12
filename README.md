@@ -20,9 +20,12 @@ This module provides:
 **Contributions welcome!**
 
 ### Compatibility
-* for Magnolia 5.5, use 0.9.3
-* for Magnolia 5.6, use 1.0.0
-* for Magnolia 6.0 and 6.1 use 1.1.0
+| Magnolia version  | Responsive DAM version |
+| ------------- | ------------- |
+| 5.5           | 0.9           |
+| 5.6           | 1.0           |
+| 6.0           | 1.1           |
+| 6.1           | 1.2           |
 
 
 Installation
