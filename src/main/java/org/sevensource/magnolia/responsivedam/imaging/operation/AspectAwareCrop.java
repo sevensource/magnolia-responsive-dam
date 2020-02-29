@@ -1,15 +1,18 @@
 package org.sevensource.magnolia.responsivedam.imaging.operation;
 
-import java.awt.image.BufferedImage;
-
-import org.sevensource.magnolia.responsivedam.focusarea.FocusArea;
-import org.sevensource.magnolia.responsivedam.imaging.parameter.AspectAwareParameter;
-
 import info.magnolia.imaging.ImagingException;
 import info.magnolia.imaging.ParameterProvider;
 import info.magnolia.imaging.operations.ImageOperation;
+import org.sevensource.magnolia.responsivedam.focusarea.FocusArea;
+import org.sevensource.magnolia.responsivedam.imaging.parameter.AspectAwareParameter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.image.BufferedImage;
 
 public class AspectAwareCrop implements ImageOperation<ParameterProvider<AspectAwareParameter>>  {
+
+	private static final Logger logger = LoggerFactory.getLogger(AspectAwareCrop.class);
 
 	@Override
 	public BufferedImage apply(BufferedImage source, ParameterProvider<AspectAwareParameter> params)
@@ -28,7 +31,28 @@ public class AspectAwareCrop implements ImageOperation<ParameterProvider<AspectA
 			cropLocation = new XYPair(focusArea.getX(), focusArea.getY());
 			cropDimension = new XYPair(focusArea.getWidth(), focusArea.getHeight());
 		}
-		return source.getSubimage(cropLocation.x(), cropLocation.y(), cropDimension.x(), cropDimension.y());
+
+		final int x = Math.max(cropLocation.x(), 0);
+		final int y = Math.max(cropLocation.y(), 0);
+		final int w = Math.min(cropDimension.x(), source.getWidth());
+		final int h = Math.min(cropDimension.y(), source.getHeight());
+
+		if(logger.isInfoEnabled()) {
+			if (x != cropLocation.x()) {
+				logger.info("X value ({}) location is outside of range, changed to {}", cropLocation.x(), x);
+			}
+			if (y != cropLocation.y()) {
+				logger.info("Y value ({}) location is outside of range, changed to {}", cropLocation.y(), y);
+			}
+			if (w != cropDimension.x()) {
+				logger.info("W value ({}) location is outside of range, changed to {}", cropDimension.x(), w);
+			}
+			if (h != cropDimension.y()) {
+				logger.info("H value ({}) location is outside of range, changed to {}", cropDimension.y(), h);
+			}
+		}
+
+		return source.getSubimage(x, y, w, h);
 	}
 
 
