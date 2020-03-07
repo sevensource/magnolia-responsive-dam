@@ -1,11 +1,13 @@
 package org.sevensource.magnolia.responsivedam.configuration;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class DamVariation {
 
 	private String name;
 	private DamVariationSet variationSet;
-	private String aspect;
-	private Double ratio;
+	private String aspect = null;
+	private Double ratio = null;
 	private final DamSizeConstraints constraints = new DamSizeConstraints();
 
 
@@ -22,8 +24,10 @@ public class DamVariation {
 	}
 
 	public void setAspect(String aspect) {
-		this.aspect = aspect;
-		this.ratio = parseRatio(aspect);
+		if(! StringUtils.isBlank(aspect)) {
+			this.aspect = aspect;
+			this.ratio = parseRatio(aspect);
+		}
 	}
 
 	public Double getRatio() {
