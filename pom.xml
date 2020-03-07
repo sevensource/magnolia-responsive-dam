@@ -4,7 +4,7 @@
 
 	<groupId>org.sevensource.magnolia</groupId>
 	<artifactId>magnolia-responsive-dam</artifactId>
-	<version>1.2.2-SNAPSHOT</version>
+	<version>1.3.0-SNAPSHOT</version>
 	<packaging>jar</packaging>
 
 	<name>Magnolia Responsive DAM Module</name>
@@ -22,8 +22,8 @@
 	<properties>
 		<javaVersion>1.8</javaVersion>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<magnoliaVersion>6.1.3</magnoliaVersion>
-		<magnolia.damApp.version>2.6</magnolia.damApp.version>
+		<magnoliaVersion>6.1.4</magnoliaVersion>
+		<magnolia.damApp.version>2.6.1</magnolia.damApp.version>
 	</properties>
 
 	<inceptionYear>2017</inceptionYear>
@@ -111,20 +111,20 @@
 			<artifactId>magnolia-ui-mediaeditor</artifactId>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 		    <groupId>javax.servlet</groupId>
 		    <artifactId>javax.servlet-api</artifactId>
 		    <version>3.1.0</version>
 		    <scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.assertj</groupId>
 			<artifactId>assertj-core</artifactId>
@@ -134,7 +134,7 @@
 	</dependencies>
 
 	<dependencyManagement>
-		<dependencies>		
+		<dependencies>
 			<dependency>
 				<groupId>info.magnolia.boms</groupId>
 				<artifactId>magnolia-external-dependencies</artifactId>
@@ -165,12 +165,12 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 			</plugin>
-			
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>

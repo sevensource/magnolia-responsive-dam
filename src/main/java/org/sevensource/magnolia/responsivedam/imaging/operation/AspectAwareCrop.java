@@ -3,6 +3,7 @@ package org.sevensource.magnolia.responsivedam.imaging.operation;
 import info.magnolia.imaging.ImagingException;
 import info.magnolia.imaging.ParameterProvider;
 import info.magnolia.imaging.operations.ImageOperation;
+import org.sevensource.magnolia.responsivedam.configuration.DamVariation;
 import org.sevensource.magnolia.responsivedam.focusarea.FocusArea;
 import org.sevensource.magnolia.responsivedam.imaging.parameter.AspectAwareParameter;
 import org.slf4j.Logger;
@@ -25,7 +26,14 @@ public class AspectAwareCrop implements ImageOperation<ParameterProvider<AspectA
 		if(focusArea == null) {
 			// use the center of the image
 			final XYPair currentDimension = new XYPair(source.getWidth(), source.getHeight());
-			cropDimension = getCropDimensions(currentDimension, params.getParameter().getDamVariation().getRatio());
+			final DamVariation variation = params.getParameter().getDamVariation();
+
+			if(variation.getRatio() == null || variation.getRatio().doubleValue() <= 0) {
+				cropDimension = currentDimension;
+			} else {
+				cropDimension = getCropDimensions(currentDimension, params.getParameter().getDamVariation().getRatio());
+			}
+
 			cropLocation = getCropLocation(currentDimension, cropDimension);
 		} else {
 			cropLocation = new XYPair(focusArea.getX(), focusArea.getY());
